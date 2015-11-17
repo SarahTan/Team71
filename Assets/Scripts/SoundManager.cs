@@ -28,78 +28,84 @@ public class SoundManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		// Using W, A, S, D, F, G
-		if (Input.GetKeyDown ("w")) {
-			StartCoroutine (IncreaseVol (0));
+		int track = -1;
 
-		} else if (Input.GetKeyDown ("a")) {
-			StartCoroutine (IncreaseVol (1));
+		// Using W, A, S, D, F, G
+		if (Input.GetKeyDown ("1")) {
+			track = 0;
+
+		} else if (Input.GetKeyDown ("2")) {
+			track = 1;
 			
-		} else if (Input.GetKeyDown ("s")) {
-			StartCoroutine (IncreaseVol (2));
+		} else if (Input.GetKeyDown ("3")) {
+			track = 2;
 			
-		} else if (Input.GetKeyDown ("d")) {
-			StartCoroutine (IncreaseVol (3));
+		} else if (Input.GetKeyDown ("4")) {
+			track = 3;
 			
-		} else if (Input.GetKeyDown ("f")) {
-			StartCoroutine (IncreaseVol (4));
+		} else if (Input.GetKeyDown ("5")) {
+			track = 4;
 			
-		} else if (Input.GetKeyDown ("g")) {
-			StartCoroutine (IncreaseVol (5));			
+		} else if (Input.GetKeyDown ("6")) {
+			track = 5;	
+		}
+
+		if (track != -1 && tracks [track].volume == 0f) {
+			feedback.Play();
+			StartCoroutine (IncreaseVol (track));
 		}
 	}
 
 	// CALL THIS FUNCTION
-	public void SendInput (int track) {
-		switch (track) {
+	public void SendInput (int input) {
+		int track = -1;
+
+		switch (input) {
 		case 11:
-			StartCoroutine (IncreaseVol (0));
+			track = 0;
 			break;
 
 		case 10:
-			StartCoroutine (IncreaseVol (1));
+			track = 1;
 			break;
 
 		case 9:
-			StartCoroutine (IncreaseVol (2));
+			track = 2;
 			break;
 			
 		case 8:
-			StartCoroutine (IncreaseVol (3));
+			track = 3;
 			break;
+
 		case 17:
-			StartCoroutine (IncreaseVol (4));
+			track = 4;
 			break;
 			
 		case 16:
-			StartCoroutine (IncreaseVol (5));
+			track = 5;
 			break;
 
 		default:
 			break;
 		}
+
+		if (track != -1 && tracks [track].volume == 0f) {
+			feedback.Play();
+			StartCoroutine (IncreaseVol (track));
+		}
 	}
 
 
 	IEnumerator IncreaseVol (int trackNum) {
-		feedback.Play();
-
-		if (tracks [trackNum].volume == 0f) {
-			Debug.Log ("Track " + trackNum + " starting");
-			while (tracks[trackNum].volume < tracksVol[trackNum]) {
-				tracks [trackNum].volume += 0.05f;
-				yield return null;
-			}
-			StartCoroutine (DecreaseVol (trackNum));
-		} else {
-			Debug.Log ("Track " + trackNum + " already playing");
+		while (tracks[trackNum].volume < tracksVol[trackNum]) {
+			tracks [trackNum].volume += 0.05f;
+			yield return null;
 		}
-
+		StartCoroutine (DecreaseVol (trackNum));
 	}
 
 	IEnumerator DecreaseVol (int trackNum) {
 		yield return new WaitForSeconds (8f);
-		Debug.Log ("Track " + trackNum + " ending");
 
 		while (tracks[trackNum].volume > 0) {
 			tracks [trackNum].volume -= 0.05f;
