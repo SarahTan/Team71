@@ -2,12 +2,16 @@
 using System.Collections;
 using System.IO.Ports;
 using System;
+
 public class SerialInputController : MonoBehaviour {
 	public SoundManager soundMgr;
 	public bool[] isTouched;
-
-	private SerialPort sp = new SerialPort("/dev/cu.usbmodem1411",9600);
-	//private SerialPort sp;
+	
+	private SerialPort sp;
+	string portName;
+	string macPort = "/dev/cu.usbmodem1411";
+	string windowsPort = "COM1";
+	bool portExists = false;
 
 	char[] byteArray;
 	int [] touchBuffer;
@@ -15,20 +19,48 @@ public class SerialInputController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		//	For checking if the port even exists before trying to open it
+		if (Application.platform == RuntimePlatform.WindowsEditor) {
+			portName = windowsPort;
+		} else {
+			portName = macPort;
+		}
+		sp = new SerialPort (portName, 9600);
+
+		string[] ports = SerialPort.GetPortNames ();
+		foreach (String port in ports) {
+			Debug.Log("Found port " + port);
+
+			if (port == portName) {
+				portExists = true;
+				sp = new SerialPort (portName, 9600);
+
+				try {
+					sp.Open ();	
+					sp.ReadTimeout = 20;
+					Debug.Log("Successfully opened port " + portName);
+				} catch (Exception e) {
+					Debug.LogError ("Cannot open port '" + portName + "'! Error: " + e);
+				}
+
+				break;
+			}
+		}
+
 		byteArray = new char[3];
 		isTouched = new bool[18];
 		touchBuffer = new int[18];
+
 		for (int i = 0; i < 18; i++) {
 			touchBuffer[i] = 0;
 			isTouched[i] = false;
-		}
-
-		sp.Open ();	
-		sp.ReadTimeout = 20;		
+		}			
 	}
 
 	void OnApplicationQuit() {
-		sp.Close ();
+		if (portExists && sp.IsOpen) {
+			sp.Close ();
+		}
 	}
 
 	void updateData(bool[] newData) {
@@ -36,9 +68,9 @@ public class SerialInputController : MonoBehaviour {
 
 		//18input
 		for (int i = 0; i < 18; i++) {
-			if(newData[i] != isTouched[i]){
+			if (newData[i] != isTouched[i]) {
 				touchBuffer[i]++;
-				if(touchBuffer[i] >= bufferSize){
+				if (touchBuffer[i] >= bufferSize) {
 					touchBuffer[i] = 0;
 					isTouched[i] = newData[i];
 				}
@@ -50,7 +82,7 @@ public class SerialInputController : MonoBehaviour {
 		//debug
 		string dbg = "";
 		for (int i = 0; i < 18; i++) {
-			if(isTouched[i]) {
+			if (isTouched[i]) {
 				soundMgr.SendInput(i);
 			}
 			dbg += (isTouched[i] ? '1':'0');
@@ -88,28 +120,25 @@ public class SerialInputController : MonoBehaviour {
 	
 	
 	void FixedUpdate () {
-		if (!sp.IsOpen) {
-			sp.Open ();
-		}
+		if (portExists) {
+			if (!sp.IsOpen) {
+				sp.Open ();
+			}
 
-		if (sp != null && sp.IsOpen) {
 			try {
-				string received=sp.ReadLine();
-				//Debug.Log(received);
-				string[] words=sp.ReadLine().Split('\t','\r');
+				string received = sp.ReadLine ();
+				Debug.Log(received);
+				string[] words = sp.ReadLine ().Split ('\t', '\r');
 				//Debug.Log(sp.ReadLine());
 
-				if(words.Length==4) {
-					touchController(words);//the last word is return
+				if (words.Length == 4) {
+					touchController (words);//the last word is return
 				}
-			} catch (System.Exception) {
-				
+			} catch (Exception e) {
+				Debug.LogError ("Cannot read from port '" + portName + "'! Error: " + e);
 			}
-			sp.Close();
-			
-		} else {
-			sp.Open();
-		}	
-		
+
+			sp.Close ();
+		}		
 	}
 }
