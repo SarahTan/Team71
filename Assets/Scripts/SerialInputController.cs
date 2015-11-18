@@ -67,7 +67,7 @@ public class SerialInputController : MonoBehaviour {
 	// For OSX, because it's annoying.
 	string[] GetPortNames () {
 		int p = (int)Environment.OSVersion.Platform;
-		string[] ports;
+		string[] ports=null;
 
 		// Check if it's a Unix system
 		if (p == 4 || p == 128 || p == 6) {
@@ -78,7 +78,7 @@ public class SerialInputController : MonoBehaviour {
 	}
 
 	void OnApplicationQuit() {
-		if ((portExists) {
+		if (portExists) {
 			sp.Close ();
 		}
 	}
