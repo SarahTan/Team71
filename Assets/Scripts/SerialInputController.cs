@@ -2,6 +2,8 @@
 using System.Collections;
 using System.IO.Ports;
 using System;
+using System.Collections.Generic;
+using System.IO;
 
 public class SerialInputController : MonoBehaviour {
 	public SoundManager soundMgr;
@@ -20,31 +22,36 @@ public class SerialInputController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//	For checking if the port even exists before trying to open it
+		string[] ports;
 		if (Application.platform == RuntimePlatform.WindowsEditor) {
 			portName = windowsPort;
-			string[] ports = SerialPort.GetPortNames ();
+			ports = SerialPort.GetPortNames ();
+		} else {
+			portName = macPort;
+			ports = GetPortNames();
+		}
 
+		if (ports.Length > 0) {
 			foreach (String port in ports) {
-				Debug.Log("Found port " + port);
-				
+				Debug.Log ("Found port " + port);
+			
 				if (port == portName) {
 					portExists = true;
 					sp = new SerialPort (portName, 9600);
-					
+				
 					try {
 						sp.Open ();	
 						sp.ReadTimeout = 20;
-						Debug.Log("Successfully opened port " + portName);
+						Debug.Log ("Successfully opened port " + portName);
 					} catch (Exception e) {
 						Debug.LogError ("Cannot open port '" + portName + "'! Error: " + e);
 					}
-					
+				
 					break;
 				}
 			}
 		} else {
-			portName = macPort;
-			sp = new SerialPort (portName, 9600);
+			Debug.Log("Your computer has no serial ports! You need a new one ):<");
 		}
 
 		byteArray = new char[3];
@@ -57,8 +64,21 @@ public class SerialInputController : MonoBehaviour {
 		}			
 	}
 
+	// For OSX, because it's annoying.
+	string[] GetPortNames () {
+		int p = (int)Environment.OSVersion.Platform;
+		string[] ports;
+
+		// Check if it's a Unix system
+		if (p == 4 || p == 128 || p == 6) {
+			ports = Directory.GetFiles ("/dev/");
+		}
+
+		return ports;
+	}
+
 	void OnApplicationQuit() {
-		if ((portExists || !Application.platform == RuntimePlatform.WindowsEditor) && sp.IsOpen) {
+		if ((portExists) {
 			sp.Close ();
 		}
 	}
@@ -120,7 +140,7 @@ public class SerialInputController : MonoBehaviour {
 	
 	
 	void FixedUpdate () {
-		if (portExists || !Application.platform == RuntimePlatform.WindowsEditor) {
+		if (portExists) {
 			if (!sp.IsOpen) {
 				sp.Open ();
 			}
