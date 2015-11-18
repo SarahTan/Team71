@@ -22,29 +22,29 @@ public class SerialInputController : MonoBehaviour {
 		//	For checking if the port even exists before trying to open it
 		if (Application.platform == RuntimePlatform.WindowsEditor) {
 			portName = windowsPort;
+			string[] ports = SerialPort.GetPortNames ();
+
+			foreach (String port in ports) {
+				Debug.Log("Found port " + port);
+				
+				if (port == portName) {
+					portExists = true;
+					sp = new SerialPort (portName, 9600);
+					
+					try {
+						sp.Open ();	
+						sp.ReadTimeout = 20;
+						Debug.Log("Successfully opened port " + portName);
+					} catch (Exception e) {
+						Debug.LogError ("Cannot open port '" + portName + "'! Error: " + e);
+					}
+					
+					break;
+				}
+			}
 		} else {
 			portName = macPort;
-		}
-		sp = new SerialPort (portName, 9600);
-
-		string[] ports = SerialPort.GetPortNames ();
-		foreach (String port in ports) {
-			Debug.Log("Found port " + port);
-
-			if (port == portName) {
-				portExists = true;
-				sp = new SerialPort (portName, 9600);
-
-				try {
-					sp.Open ();	
-					sp.ReadTimeout = 20;
-					Debug.Log("Successfully opened port " + portName);
-				} catch (Exception e) {
-					Debug.LogError ("Cannot open port '" + portName + "'! Error: " + e);
-				}
-
-				break;
-			}
+			sp = new SerialPort (portName, 9600);
 		}
 
 		byteArray = new char[3];
@@ -58,7 +58,7 @@ public class SerialInputController : MonoBehaviour {
 	}
 
 	void OnApplicationQuit() {
-		if (portExists && sp.IsOpen) {
+		if ((portExists || !Application.platform == RuntimePlatform.WindowsEditor) && sp.IsOpen) {
 			sp.Close ();
 		}
 	}
@@ -108,19 +108,19 @@ public class SerialInputController : MonoBehaviour {
 
 		updateData (status);
 		//debug
-		/*
-		 * string dbg="";
+		
+		 string dbg="";
 		for (int i=0; i<18; i++) {
 			dbg+=(status[i]?'1':'0');
 		}
 				Debug.Log (dbg);
-		 * */
+		 
 
 	}
 	
 	
 	void FixedUpdate () {
-		if (portExists) {
+		if (portExists || !Application.platform == RuntimePlatform.WindowsEditor) {
 			if (!sp.IsOpen) {
 				sp.Open ();
 			}
