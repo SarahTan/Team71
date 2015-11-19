@@ -78,7 +78,7 @@ public class SerialInputController : MonoBehaviour {
 	}
 
 	void OnApplicationQuit() {
-		if ((portExists)) {
+		if (portExists) {
 			sp.Close ();
 		}
 	}
