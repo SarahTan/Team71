@@ -44,14 +44,29 @@ public class State : MonoBehaviour {
 			//throw new ArgumentException("State num can only be from 0 - 3.");
 			break;
 		}
+
+		buttonIsStepped = new bool[numButtons];
 	}
 
-	public bool ButtonIsStepped (int button) {
-		return buttonIsStepped [button];
+	public bool ButtonIsStepped (int buttonStepped) {
+		bool stepped = false;
+
+		for (int i = 0; i < numButtons; i ++) {
+			if (buttonStepped == buttons[i] && buttonIsStepped[i]) {
+				stepped = true;
+				break;
+			}
+		}
+		return stepped;
 	}
 
-	public void StepOnButton (int button) {
-		buttonIsStepped [button] = true;
+	public void StepOnButton (int buttonStepped) {
+		for (int i = 0; i < numButtons; i ++) {
+			if (buttonStepped == buttons[i]) {
+				buttonIsStepped [i] = true;
+				break;
+			}
+		}
 
 		foreach (bool b in buttonIsStepped) {
 			if (!b) {
@@ -61,9 +76,14 @@ public class State : MonoBehaviour {
 		}
 	}
 
-	public void StepOffButton (int button) {
-		buttonIsStepped [button] = false;
-		allButtonsStepped = false;
+	public void StepOffButton (int buttonStepped) {
+		for (int i = 0; i < numButtons; i ++) {
+			if (buttonStepped == buttons[i]) {
+				buttonIsStepped [i] = false;
+				allButtonsStepped = false;
+				break;
+			}
+		}
 	}
 
 	// Check if the button which is stepped on is in the state

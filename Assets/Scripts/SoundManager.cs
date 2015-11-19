@@ -8,7 +8,7 @@ public class SoundManager : MonoBehaviour {
 	AudioSource feedback;
 	AudioSource[] tracks;
 	float[] tracksMaxVol;
-
+	
 	// Use this for initialization
 	void Start () {
 		feedback = transform.FindChild ("Feedback").GetComponent<AudioSource> ();
