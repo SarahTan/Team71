@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class State : MonoBehaviour {
+public class State {
 
 	public int num;					// What state number this is
 	public int numButtons;			// Total number of buttons in this state
