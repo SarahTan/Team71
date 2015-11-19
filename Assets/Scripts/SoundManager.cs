@@ -7,7 +7,7 @@ public class SoundManager : MonoBehaviour {
 	Transform tracksParent;
 	AudioSource feedback;
 	AudioSource[] tracks;
-	float[] tracksVol;
+	float[] tracksMaxVol;
 
 	// Use this for initialization
 	void Start () {
@@ -20,10 +20,10 @@ public class SoundManager : MonoBehaviour {
 		}
 
 		// Set the play volume for each of the tracks
-		tracksVol = new float[numTracks];
-		tracksVol [0] = tracksVol [1] = tracksVol [2] = tracksVol [4] = 1f;
-		tracksVol [3] = 0.75f;
-		tracksVol [5] = 0.5f;
+		tracksMaxVol = new float[numTracks];
+		tracksMaxVol [0] = tracksMaxVol [1] = tracksMaxVol [2] = tracksMaxVol [4] = 1f;
+		tracksMaxVol [3] = 0.75f;
+		tracksMaxVol [5] = 0.5f;
 	}
 	
 	// Update is called once per frame
@@ -95,13 +95,33 @@ public class SoundManager : MonoBehaviour {
 		}
 	}
 
+	public void PlayFeedback () {
+		feedback.Play();
+	}
+
+	public void StartMusic (int trackNum) {
+		// Only create a thread to increase vol if it's at 0!
+		if (tracks[trackNum].volume == 0) {
+			StartCoroutine (IncreaseVol (trackNum));
+		}
+	}
+
+	public void StopMusic (int trackNum) {
+		// Only create a thread to decrease vol if it's at it's max!
+		if (tracks [trackNum].volume == tracksMaxVol[trackNum]) {
+			StartCoroutine (DecreaseVol (trackNum));
+		}
+	}
+
+	public void PlayRemix () {
+
+	}
 
 	IEnumerator IncreaseVol (int trackNum) {
-		while (tracks[trackNum].volume < tracksVol[trackNum]) {
+		while (tracks[trackNum].volume < tracksMaxVol[trackNum]) {
 			tracks [trackNum].volume += 0.05f;
 			yield return null;
 		}
-		StartCoroutine (DecreaseVol (trackNum));
 	}
 
 	IEnumerator DecreaseVol (int trackNum) {

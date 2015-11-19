@@ -15,7 +15,7 @@ public class SerialInputController : MonoBehaviour {
 	string windowsPort = "COM1";
 	bool portExists = false;
 
-	char[] byteArray;
+	//char[] byteArray;
 	int [] touchBuffer;
 	int bufferSize = 2;
 
@@ -54,7 +54,7 @@ public class SerialInputController : MonoBehaviour {
 			Debug.Log("Your computer has no serial ports! You need a new one ):<");
 		}
 
-		byteArray = new char[3];
+		//byteArray = new char[3];
 		isTouched = new bool[18];
 		touchBuffer = new int[18];
 
@@ -67,7 +67,7 @@ public class SerialInputController : MonoBehaviour {
 	// For OSX, because it's annoying.
 	string[] GetPortNames () {
 		int p = (int)Environment.OSVersion.Platform;
-		string[] ports;
+		string[] ports = null;
 
 		// Check if it's a Unix system
 		if (p == 4 || p == 128 || p == 6) {
@@ -78,7 +78,7 @@ public class SerialInputController : MonoBehaviour {
 	}
 
 	void OnApplicationQuit() {
-		if ((portExists) {
+		if ((portExists)) {
 			sp.Close ();
 		}
 	}
@@ -155,7 +155,9 @@ public class SerialInputController : MonoBehaviour {
 					touchController (words);//the last word is return
 				}
 			} catch (Exception e) {
-				Debug.LogError ("Cannot read from port '" + portName + "'! Error: " + e);
+				if (Application.platform != RuntimePlatform.WindowsEditor) {
+					Debug.LogError ("Cannot read from port '" + portName + "'! Error: " + e);
+				}
 			}
 
 			sp.Close ();
