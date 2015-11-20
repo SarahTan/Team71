@@ -4,6 +4,7 @@ using System.Collections;
 public class StateMachine : MonoBehaviour {
 
 	SoundManager soundMgr;
+	LightController lightCtrl;
 	int currentState = 0;
 	int numStates = 5;
 	State[] states;
@@ -17,6 +18,7 @@ public class StateMachine : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		soundMgr = GameObject.Find ("Sound Manager").GetComponent<SoundManager>();
+		lightCtrl = GameObject.Find ("Light Controller").GetComponent<LightController> ();
 
 		states = new State[numStates];
 		for (int i = 0; i < numStates; i++) {
@@ -79,7 +81,7 @@ public class StateMachine : MonoBehaviour {
 		string str = "Unstepped buttons: ";
 		for (int i = 0; i < buttonIsStepped.Length; i++) {
 			if (!buttonIsStepped[i]) {
-				// Call lightMgr here to flash light "states[currentState].buttons[i]"
+				lightCtrl.FlashLED (states[currentState].buttons[i]);
 				string tempStr = i + ", ";
 				str += tempStr;
 			}
@@ -112,7 +114,7 @@ public class StateMachine : MonoBehaviour {
 
 			if (currentState == 4 && AllButtonsStepped()) {
 				soundMgr.PlayRemix();
-				// Call lightMgr here to go crazy and flash everything out of sync
+				lightCtrl.RemixLED ();
 			} else if (currentState == 4) {
 				currentState = 1;
 			}
@@ -139,7 +141,7 @@ public class StateMachine : MonoBehaviour {
 		// If the button isn't being stepped on after time is up, just stop music
 		if (!buttonIsStepped[button]) {
 			soundMgr.StopMusic(button);
-			// Call lightMgr here to turn off light "button"
+			lightCtrl.TurnOffLED (button);
 		}
 	}
 
@@ -163,7 +165,7 @@ public class StateMachine : MonoBehaviour {
 				}
 				
 				soundMgr.StartMusic (button);
-				// Call lightMgr here to turn on light "button"
+				lightCtrl.TurnOnLED (button);
 			}
 		}
 	}
@@ -175,9 +177,9 @@ public class StateMachine : MonoBehaviour {
 
 		if (readyToTurnOff[button]) {
 			soundMgr.StopMusic(button);
-			// Call lightMgr here to turn off light "button"
+			lightCtrl.TurnOffLED (button);
 		} else {
-			// Call lightMgr here to flash light "button"
+			lightCtrl.FlashLED (button);
 		}
 	}
 	

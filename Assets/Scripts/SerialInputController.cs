@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 
 public class SerialInputController : MonoBehaviour {
-	public SoundManager soundMgr;
+
+	public StateMachine stateMachine;
 	public bool[] isTouched;
 
 	public int[] ledMode;
@@ -17,7 +18,6 @@ public class SerialInputController : MonoBehaviour {
 	string macPort = "/dev/cu.usbmodem1411";
 	string windowsPort = "COM1";
 	bool portExists = false;
-	char[] byteArray;
 	int [] touchBuffer;
 	int bufferSize = 2;
 
@@ -56,7 +56,6 @@ public class SerialInputController : MonoBehaviour {
 			Debug.Log("Your computer has no serial ports! You need a new one ):<");
 		}
 
-		byteArray = new char[3];
 		isTouched = new bool[18];
 		touchBuffer = new int[18];
 
@@ -72,7 +71,7 @@ public class SerialInputController : MonoBehaviour {
 	// For OSX, because it's annoying.
 	string[] GetPortNames () {
 		int p = (int)Environment.OSVersion.Platform;
-		string[] ports=null;
+		string[] ports = null;
 
 		// Check if it's a Unix system
 		if (p == 4 || p == 128 || p == 6) {
@@ -108,7 +107,9 @@ public class SerialInputController : MonoBehaviour {
 		string dbg = "";
 		for (int i = 0; i < 18; i++) {
 			if (isTouched[i]) {
-				soundMgr.SendInput(i);
+				// SEND INPUT TO STATE MACHINE HERE!
+
+
 			}
 			dbg += (isTouched[i] ? '1':'0');
 		}
@@ -134,15 +135,12 @@ public class SerialInputController : MonoBehaviour {
 		updateData (status);
 		//debug
 		
-		 string dbg="";
-		for (int i=0; i<18; i++) {
-			dbg+=(status[i]?'1':'0');
+		 string dbg = "";
+		for (int i = 0; i < 18; i++) {
+			dbg += (status[i] ? '1':'0');
 		}
-				Debug.Log (dbg);
-		 
-
-	}
-	
+		Debug.Log (dbg);	
+	}	
 	
 	void FixedUpdate () {
 		if (portExists) {
@@ -160,7 +158,9 @@ public class SerialInputController : MonoBehaviour {
 					touchController (words);//the last word is return
 				}
 			} catch (Exception e) {
-				Debug.LogError ("Cannot read from port '" + portName + "'! Error: " + e);
+				if (Application.platform != RuntimePlatform.WindowsEditor) {
+					Debug.LogError ("Cannot read from port '" + portName + "'! Error: " + e);
+				}
 			}
 
 			sp.Close ();

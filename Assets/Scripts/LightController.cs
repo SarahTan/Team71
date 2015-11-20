@@ -7,7 +7,7 @@ using System.IO;
 
 public class LightController : MonoBehaviour {
 
-	private byte[] ledMode={6,6,6,6,6,6,6,6};
+	private byte[] ledMode = {6,6,6,6,6,6,6,6};
 	
 	private SerialPort led;
 	public bool[] isTouched;
@@ -76,15 +76,15 @@ public class LightController : MonoBehaviour {
 	}
 
 	void sendLEDStatus(){
-		byte[] data=new byte[8];
-		for (int i=0; i<8; i++) {
+		byte[] data = new byte[8];
+		for (int i = 0; i < 8; i++) {
 			//index
 			data[i]=(byte)i;
 			data[i]=(byte)((data[i]<<4)&0xF0);
 
 			//mode
 			data[i]+= ledMode[i];
-			Debug.Log(ledMode[i]);
+//			Debug.Log(ledMode[i]);
 		}
 		if(!led.IsOpen){
 			led.Open();
@@ -92,10 +92,24 @@ public class LightController : MonoBehaviour {
 		try {
 			led.Write(data,0,8);
 		} catch (Exception e) {
-			Debug.LogError ("Cannot  write port! Error: " + e);
-		}
-		
-		
+			Debug.LogError ("Cannot write to port! Error: " + e);
+		}		
+	}
+
+	public void TurnOnLED (int button) {
+		Debug.Log ("LED " + button + " turned on");
+	}
+
+	public void FlashLED (int button) {		
+		Debug.Log ("LED " + button + " flashing");
+	}
+
+	public void TurnOffLED (int button) {		
+		Debug.Log ("LED " + button + " turned off");
+	}
+
+	public void RemixLED () {
+		Debug.Log ("LEDs remixing!");
 	}
 
 }
