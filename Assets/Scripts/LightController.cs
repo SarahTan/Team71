@@ -7,7 +7,7 @@ using System.IO;
 
 public class LightController : MonoBehaviour {
 
-	private byte[] ledMode = {6,6,6,6,6,6,6,6};
+	private byte[] ledMode = {0,0,0,0,0,0,0,0};
 	
 	private SerialPort led;
 	public bool[] isTouched;
@@ -98,18 +98,38 @@ public class LightController : MonoBehaviour {
 
 	public void TurnOnLED (int button) {
 		Debug.Log ("LED " + button + " turned on");
+		if (button > 7) {
+			Debug.Log ("TurnOn : wrong index for LED button "+button);
+			return;
+		}
+		ledMode [button] = 1;
 	}
 
 	public void FlashLED (int button) {		
 		Debug.Log ("LED " + button + " flashing");
+		if (button > 7) {
+			Debug.Log ("Flash : wrong index for LED button "+button);
+			return;
+		}
+		ledMode [button] = 2;
 	}
 
 	public void TurnOffLED (int button) {		
 		Debug.Log ("LED " + button + " turned off");
+		if (button > 7) {
+			Debug.Log ("TurnOff : wrong index for LED button "+button);
+			return;
+		}
+		ledMode [button] = 0;
 	}
 
 	public void RemixLED () {
 		Debug.Log ("LEDs remixing!");
+		if (button > 7) {
+			Debug.Log ("Remix : wrong index for LED button "+button);
+			return;
+		}
+		ledMode [button] = 6;
 	}
 
 }
