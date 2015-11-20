@@ -48,42 +48,42 @@ public class State {
 		buttonIsStepped = new bool[numButtons];
 	}
 
-	public bool ButtonIsStepped (int buttonStepped) {
-		bool stepped = false;
-
-		for (int i = 0; i < numButtons; i ++) {
-			if (buttonStepped == buttons[i] && buttonIsStepped[i]) {
-				stepped = true;
-				break;
-			}
-		}
-		return stepped;
-	}
+//	public bool StateButtonIsStepped (int buttonStepped) {
+//		bool stepped = false;
+//
+//		for (int i = 0; i < numButtons; i ++) {
+//			if (buttonStepped == buttons[i] && buttonIsStepped[i]) {
+//				stepped = true;
+//				break;
+//			}
+//		}
+//		return stepped;
+//	}
 
 	public void StepOnButton (int buttonStepped) {
-		for (int i = 0; i < numButtons; i ++) {
-			if (buttonStepped == buttons[i]) {
-				buttonIsStepped [i] = true;
-				break;
-			}
-		}
-
-		foreach (bool b in buttonIsStepped) {
-			if (!b) {
-				allButtonsStepped = false;
-				break;
-			}
-		}
+//		for (int i = 0; i < numButtons; i ++) {
+//			if (buttonStepped == buttons[i]) {
+//				buttonIsStepped [i] = true;
+//				break;
+//			}
+//		}
+//
+//		foreach (bool b in buttonIsStepped) {
+//			if (!b) {
+//				allButtonsStepped = false;
+//				break;
+//			}
+//		}
 	}
 
 	public void StepOffButton (int buttonStepped) {
-		for (int i = 0; i < numButtons; i ++) {
-			if (buttonStepped == buttons[i]) {
-				buttonIsStepped [i] = false;
-				allButtonsStepped = false;
-				break;
-			}
-		}
+//		for (int i = 0; i < numButtons; i ++) {
+//			if (buttonStepped == buttons[i]) {
+//				buttonIsStepped [i] = false;
+//				allButtonsStepped = false;
+//				break;
+//			}
+//		}
 	}
 
 	// Check if the button which is stepped on is in the state
@@ -94,15 +94,5 @@ public class State {
 			}
 		}
 		return false;
-	}
-
-	// Use this for initialization
-	void Start () {
-
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 }

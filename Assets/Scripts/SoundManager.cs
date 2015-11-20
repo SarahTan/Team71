@@ -28,32 +28,7 @@ public class SoundManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		int track = -1;
 
-		// Using W, A, S, D, F, G
-		if (Input.GetKeyDown ("1")) {
-			track = 0;
-
-		} else if (Input.GetKeyDown ("2")) {
-			track = 1;
-			
-		} else if (Input.GetKeyDown ("3")) {
-			track = 2;
-			
-		} else if (Input.GetKeyDown ("4")) {
-			track = 3;
-			
-		} else if (Input.GetKeyDown ("5")) {
-			track = 4;
-			
-		} else if (Input.GetKeyDown ("6")) {
-			track = 5;	
-		}
-
-		if (track != -1 && tracks [track].volume == 0f) {
-			feedback.Play();
-			StartCoroutine (IncreaseVol (track));
-		}
 	}
 
 	// CALL THIS FUNCTION
@@ -120,16 +95,14 @@ public class SoundManager : MonoBehaviour {
 	IEnumerator IncreaseVol (int trackNum) {
 		while (tracks[trackNum].volume < tracksMaxVol[trackNum]) {
 			tracks [trackNum].volume += 0.05f;
-			yield return null;
+			yield return new WaitForFixedUpdate();
 		}
 	}
 
 	IEnumerator DecreaseVol (int trackNum) {
-		yield return new WaitForSeconds (8f);
-
 		while (tracks[trackNum].volume > 0) {
 			tracks [trackNum].volume -= 0.05f;
-			yield return null;
+			yield return new WaitForFixedUpdate();
 		}
 	}
 

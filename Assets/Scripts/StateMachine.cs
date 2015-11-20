@@ -7,11 +7,12 @@ public class StateMachine : MonoBehaviour {
 	int currentState = 0;
 	int numStates = 5;
 	State[] states;
-	float stateLength = 8f;
+	float stateLength = 4f;
 	float remixLength = 10f;
 
 	bool[] readyToTurnOff = new bool[8];
 	bool[] buttonTimerInProgress = new bool[8];
+	bool[] buttonIsStepped = new bool[8];
 
 	// Use this for initialization
 	void Start () {
@@ -75,17 +76,25 @@ public class StateMachine : MonoBehaviour {
 
 	// Called at the start of each state, to flash any buttons which aren't already stepped on
 	void FlashAllUnsteppedButtons () {
-		for (int i = 0; i < states[currentState].numButtons; i++) {
-			if (!states[currentState].ButtonIsStepped (states[currentState].buttons[i])) {
+		string str = "Unstepped buttons: ";
+		for (int i = 0; i < buttonIsStepped.Length; i++) {
+			if (!buttonIsStepped[i]) {
 				// Call lightMgr here to flash light "states[currentState].buttons[i]"
+				string tempStr = i + ", ";
+				str += tempStr;
 			}
 		}
+		Debug.Log (str);
 	}
 
 	// Called in State0, when correct button is stepped on
 	// This class handles all state transitions
 	IEnumerator StateTimer () {
+		Debug.Log ("State: " + currentState);
+
 		currentState++;
+		Debug.Log ("State: " + currentState);
+
 		while (currentState != 4) {
 			yield return new WaitForSeconds(stateLength);
 			currentState++;		// STATE CHANGES HERE!!!
@@ -95,14 +104,16 @@ public class StateMachine : MonoBehaviour {
 			if (currentState == 4 && states[currentState].allButtonsStepped) {
 				soundMgr.PlayRemix();
 				// Call lightMgr here to go crazy and flash everything out of sync
-			} else {
+			} else if (currentState == 4) {
 				currentState = 1;
 			}
+			Debug.Log ("State: " + currentState);
 		}
 
 		if (currentState == 4) {
 			yield return new WaitForSeconds(remixLength);
 			currentState = 0;
+			Debug.Log ("State: " + currentState);
 			FlashAllUnsteppedButtons();
 		}
 	}
@@ -116,7 +127,7 @@ public class StateMachine : MonoBehaviour {
 		buttonTimerInProgress[button] = false;
 
 		// If the button isn't being stepped on after time is up, just stop music
-		if (!states [currentState].ButtonIsStepped (button)) {
+		if (!buttonIsStepped[button]) {
 			soundMgr.StopMusic(button);
 			// Call lightMgr here to turn off light "button"
 		}
@@ -125,13 +136,15 @@ public class StateMachine : MonoBehaviour {
 	// Called by SerialInputController
 	public void StepOn (int input) {
 		int button = ButtonMapping (input);
+		buttonIsStepped[button] = true;
 
 		if (currentState != 4) {
 			soundMgr.PlayFeedback ();
 
+			Debug.Log("button in state: " + states [currentState].ButtonInState (button));
+
 			// Check if button is in state and is not currently being stepped on
-			if (states [currentState].ButtonInState (button) &&
-			    	!states [currentState].ButtonIsStepped (button)) {
+			if (states [currentState].ButtonInState (button) && buttonIsStepped[button]) {
 				states [currentState].StepOnButton (button);
 				
 				// Start button and state timers if required
@@ -151,6 +164,7 @@ public class StateMachine : MonoBehaviour {
 	// Called by SerialInputController
 	public void StepOff (int input) {
 		int button = ButtonMapping (input);
+		buttonIsStepped[button] = false;
 
 		if (states[currentState].ButtonInState(button)) {
 			states [currentState].StepOffButton(button);
