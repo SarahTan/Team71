@@ -125,11 +125,8 @@ public class LightController : MonoBehaviour {
 
 	public void RemixLED () {
 		Debug.Log ("LEDs remixing!");
-		if (button > 7) {
-			Debug.Log ("Remix : wrong index for LED button "+button);
-			return;
-		}
-		ledMode [button] = 6;
+		for(int i=0;i<8;i++)
+		ledMode [i] = 6;
 	}
 
 }
