@@ -8,14 +8,16 @@ using System.IO;
 public class SerialInputController : MonoBehaviour {
 	public SoundManager soundMgr;
 	public bool[] isTouched;
-	
+
+	public int[] ledMode;
+
+	private SerialPort led;
 	private SerialPort sp;
 	string portName;
 	string macPort = "/dev/cu.usbmodem1411";
 	string windowsPort = "COM1";
 	bool portExists = false;
-
-	//char[] byteArray;
+	char[] byteArray;
 	int [] touchBuffer;
 	int bufferSize = 2;
 
@@ -54,20 +56,23 @@ public class SerialInputController : MonoBehaviour {
 			Debug.Log("Your computer has no serial ports! You need a new one ):<");
 		}
 
-		//byteArray = new char[3];
+		byteArray = new char[3];
 		isTouched = new bool[18];
 		touchBuffer = new int[18];
 
 		for (int i = 0; i < 18; i++) {
 			touchBuffer[i] = 0;
 			isTouched[i] = false;
-		}			
+		}	
+		/////led
+
 	}
 
+	
 	// For OSX, because it's annoying.
 	string[] GetPortNames () {
 		int p = (int)Environment.OSVersion.Platform;
-		string[] ports = null;
+		string[] ports=null;
 
 		// Check if it's a Unix system
 		if (p == 4 || p == 128 || p == 6) {
@@ -155,9 +160,7 @@ public class SerialInputController : MonoBehaviour {
 					touchController (words);//the last word is return
 				}
 			} catch (Exception e) {
-				if (Application.platform != RuntimePlatform.WindowsEditor) {
-					Debug.LogError ("Cannot read from port '" + portName + "'! Error: " + e);
-				}
+				Debug.LogError ("Cannot read from port '" + portName + "'! Error: " + e);
 			}
 
 			sp.Close ();
