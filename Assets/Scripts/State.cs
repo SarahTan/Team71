@@ -7,9 +7,6 @@ public class State {
 	public int num;					// What state number this is
 	public int numButtons;			// Total number of buttons in this state
 	public int[] buttons;			// The values of the buttons in this state
-	public bool allButtonsStepped = false;
-	
-	bool[] buttonIsStepped;	// Whether the respective buttons have been stepped on
 
 	public State (int stateNum) {
 		num = stateNum;
@@ -44,46 +41,6 @@ public class State {
 			//throw new ArgumentException("State num can only be from 0 - 3.");
 			break;
 		}
-
-		buttonIsStepped = new bool[numButtons];
-	}
-
-//	public bool StateButtonIsStepped (int buttonStepped) {
-//		bool stepped = false;
-//
-//		for (int i = 0; i < numButtons; i ++) {
-//			if (buttonStepped == buttons[i] && buttonIsStepped[i]) {
-//				stepped = true;
-//				break;
-//			}
-//		}
-//		return stepped;
-//	}
-
-	public void StepOnButton (int buttonStepped) {
-//		for (int i = 0; i < numButtons; i ++) {
-//			if (buttonStepped == buttons[i]) {
-//				buttonIsStepped [i] = true;
-//				break;
-//			}
-//		}
-//
-//		foreach (bool b in buttonIsStepped) {
-//			if (!b) {
-//				allButtonsStepped = false;
-//				break;
-//			}
-//		}
-	}
-
-	public void StepOffButton (int buttonStepped) {
-//		for (int i = 0; i < numButtons; i ++) {
-//			if (buttonStepped == buttons[i]) {
-//				buttonIsStepped [i] = false;
-//				allButtonsStepped = false;
-//				break;
-//			}
-//		}
 	}
 
 	// Check if the button which is stepped on is in the state

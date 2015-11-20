@@ -87,6 +87,15 @@ public class StateMachine : MonoBehaviour {
 		Debug.Log (str);
 	}
 
+	bool AllButtonsStepped () {
+		foreach (bool steppedOn in buttonIsStepped) {
+			if (!steppedOn) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	// Called in State0, when correct button is stepped on
 	// This class handles all state transitions
 	IEnumerator StateTimer () {
@@ -101,7 +110,7 @@ public class StateMachine : MonoBehaviour {
 
 			FlashAllUnsteppedButtons();
 
-			if (currentState == 4 && states[currentState].allButtonsStepped) {
+			if (currentState == 4 && AllButtonsStepped()) {
 				soundMgr.PlayRemix();
 				// Call lightMgr here to go crazy and flash everything out of sync
 			} else if (currentState == 4) {
@@ -121,6 +130,7 @@ public class StateMachine : MonoBehaviour {
 	IEnumerator ButtonTimer (int button) {
 		readyToTurnOff[button] = false;
 		buttonTimerInProgress [button] = true;
+
 		yield return new WaitForSeconds (stateLength);
 
 		readyToTurnOff [button] = true;
@@ -141,13 +151,10 @@ public class StateMachine : MonoBehaviour {
 		if (currentState != 4) {
 			soundMgr.PlayFeedback ();
 
-			Debug.Log("button in state: " + states [currentState].ButtonInState (button));
-
 			// Check if button is in state and is not currently being stepped on
 			if (states [currentState].ButtonInState (button) && buttonIsStepped[button]) {
-				states [currentState].StepOnButton (button);
 				
-				// Start button and state timers if required
+				// Start timers
 				if (!buttonTimerInProgress [button]) {
 					StartCoroutine (ButtonTimer (button));
 				}			
@@ -166,15 +173,11 @@ public class StateMachine : MonoBehaviour {
 		int button = ButtonMapping (input);
 		buttonIsStepped[button] = false;
 
-		if (states[currentState].ButtonInState(button)) {
-			states [currentState].StepOffButton(button);
-
-			if (readyToTurnOff[button]) {
-				soundMgr.StopMusic(button);
-				// Call lightMgr here to turn off light "button"
-			} else {
-				// Call lightMgr here to flash light "button"
-			}
+		if (readyToTurnOff[button]) {
+			soundMgr.StopMusic(button);
+			// Call lightMgr here to turn off light "button"
+		} else {
+			// Call lightMgr here to flash light "button"
 		}
 	}
 	

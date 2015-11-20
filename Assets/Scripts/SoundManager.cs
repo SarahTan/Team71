@@ -5,25 +5,37 @@ public class SoundManager : MonoBehaviour {
 
 	int numTracks = 6;
 	Transform tracksParent;
+	AudioSource bgm;
 	AudioSource feedback;
+	AudioSource remix;
 	AudioSource[] tracks;
-	float[] tracksMaxVol;
-	
+	float maxVol = 1f;
+	bool[] changingVol;
+
+	string[] songs;
+	int numSongs = 1;
+	int currentSong;
+
 	// Use this for initialization
 	void Start () {
-		feedback = transform.FindChild ("Feedback").GetComponent<AudioSource> ();
-		tracksParent = transform.FindChild ("Tracks");
+		changingVol = new bool[numTracks];
 
+		songs = new string[numSongs];
+		for (int i = 0; i < numSongs; i++) {
+			songs[i] = "Music/Song" + (i+1);
+		}
+
+		bgm = transform.FindChild ("BGM").GetComponent<AudioSource> ();
+		feedback = transform.FindChild ("Feedback").GetComponent<AudioSource> ();
+		remix = transform.FindChild ("Remix").GetComponent<AudioSource> ();
+
+		tracksParent = transform.FindChild ("Tracks");
 		tracks = new AudioSource[numTracks];
 		for (int i = 0; i < numTracks; i++) {
 			tracks[i] = tracksParent.GetChild(i).GetComponent<AudioSource>();
 		}
-
-		// Set the play volume for each of the tracks
-		tracksMaxVol = new float[numTracks];
-		tracksMaxVol [0] = tracksMaxVol [1] = tracksMaxVol [2] = tracksMaxVol [4] = 1f;
-		tracksMaxVol [3] = 0.75f;
-		tracksMaxVol [5] = 0.5f;
+		currentSong = 0;
+		ChangeSong (songs [currentSong]);
 	}
 	
 	// Update is called once per frame
@@ -33,40 +45,40 @@ public class SoundManager : MonoBehaviour {
 
 	// CALL THIS FUNCTION
 	public void SendInput (int input) {
-		int track = -1;
+		int trackNum = -1;
 
 		switch (input) {
 		case 11:
-			track = 0;
+			trackNum = 0;
 			break;
 
 		case 10:
-			track = 1;
+			trackNum = 1;
 			break;
 
 		case 9:
-			track = 2;
+			trackNum = 2;
 			break;
 			
 		case 8:
-			track = 3;
+			trackNum = 3;
 			break;
 
 		case 17:
-			track = 4;
+			trackNum = 4;
 			break;
 			
 		case 16:
-			track = 5;
+			trackNum = 5;
 			break;
 
 		default:
 			break;
 		}
 
-		if (track != -1 && tracks [track].volume == 0f) {
+		if (trackNum != -1 && tracks [trackNum].volume == 0f) {
 			feedback.Play();
-			StartCoroutine (IncreaseVol (track));
+			StartCoroutine (IncreaseVol (tracks[trackNum], trackNum));
 		}
 	}
 
@@ -75,35 +87,75 @@ public class SoundManager : MonoBehaviour {
 	}
 
 	public void StartMusic (int trackNum) {
-		// Only create a thread to increase vol if it's at 0!
-		if (tracks[trackNum].volume == 0) {
-			StartCoroutine (IncreaseVol (trackNum));
+		if (tracks [trackNum].volume == 0f) {
+			StartCoroutine (IncreaseVol (tracks [trackNum], trackNum));
 		}
 	}
 
 	public void StopMusic (int trackNum) {
-		// Only create a thread to decrease vol if it's at it's max!
-		if (tracks [trackNum].volume == tracksMaxVol[trackNum]) {
-			StartCoroutine (DecreaseVol (trackNum));
+		if (tracks[trackNum].volume == maxVol) {
+			StartCoroutine (DecreaseVol (tracks[trackNum], trackNum));
 		}
 	}
 
 	public void PlayRemix () {
-
+		foreach (AudioSource audio in tracks) {
+			audio.volume = 0f;
+		}
+		remix.Play ();
 	}
 
-	IEnumerator IncreaseVol (int trackNum) {
-		while (tracks[trackNum].volume < tracksMaxVol[trackNum]) {
-			tracks [trackNum].volume += 0.05f;
-			yield return new WaitForFixedUpdate();
+	public void StopRemix () {
+		remix.Stop ();
+
+		int nextSong = currentSong;
+
+		while (numSongs != 1 && nextSong == currentSong) {
+			nextSong = Random.Range (0, numSongs);
 		}
+
+		ChangeSong (songs[nextSong]);
 	}
 
-	IEnumerator DecreaseVol (int trackNum) {
-		while (tracks[trackNum].volume > 0) {
-			tracks [trackNum].volume -= 0.05f;
+	void ChangeSong (string folder) {
+		AudioClip[] clips = Resources.LoadAll<AudioClip> (folder);
+
+		for (int i = 0; i < tracks.Length; i++) {
+			tracks[i].clip = clips[i];
+			tracks[i].volume = 0f;
+			tracks[i].Play();
+		}
+
+		bgm.clip = clips [clips.Length-2];	// The second last track in the folder
+		bgm.Play ();
+
+		remix.clip = clips [clips.Length-1];	// The last track in the folder
+	}
+
+	IEnumerator IncreaseVol (AudioSource audio, int trackNum) {
+		while (changingVol[trackNum]) {
 			yield return new WaitForFixedUpdate();
 		}
+
+		changingVol [trackNum] = true;
+		while (audio.volume < maxVol) {
+			audio.volume += 0.05f;
+			yield return new WaitForFixedUpdate();
+		}
+		changingVol[trackNum] = false;
+	}
+
+	IEnumerator DecreaseVol (AudioSource audio, int trackNum) {
+		while (changingVol[trackNum]) {
+			yield return new WaitForFixedUpdate();
+		}
+
+		changingVol[trackNum] = true;
+		while (audio.volume > 0) {
+			audio.volume -= 0.05f;
+			yield return new WaitForFixedUpdate();
+		}
+		changingVol[trackNum] = false;
 	}
 
 }
