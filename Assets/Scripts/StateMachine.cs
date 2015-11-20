@@ -11,12 +11,17 @@ public class StateMachine : MonoBehaviour {
 	float stateLength = 4f;
 	float remixLength = 10f;
 
-	bool[] readyToTurnOff = new bool[8];
-	bool[] buttonTimerInProgress = new bool[8];
-	bool[] buttonIsStepped = new bool[8];
+	int numButtons = 4;
+	bool[] readyToTurnOff;
+	bool[] buttonTimerInProgress;
+	bool[] buttonIsStepped;
 
 	// Use this for initialization
 	void Start () {
+		readyToTurnOff = new bool[numButtons];
+		buttonTimerInProgress = new bool[numButtons];
+		buttonIsStepped = new bool[numButtons];
+
 		soundMgr = GameObject.Find ("Sound Manager").GetComponent<SoundManager>();
 		lightCtrl = GameObject.Find ("Light Controller").GetComponent<LightController> ();
 
@@ -24,6 +29,7 @@ public class StateMachine : MonoBehaviour {
 		for (int i = 0; i < numStates; i++) {
 			states[i] = new State(i);
 		}
+		FlashAllUnsteppedButtons ();
 	}
 	
 	// Update is called once per frame
@@ -78,9 +84,9 @@ public class StateMachine : MonoBehaviour {
 
 	// Called at the start of each state, to flash any buttons which aren't already stepped on
 	void FlashAllUnsteppedButtons () {
-		string str = "Unstepped buttons: ";
+		string str = "State " + currentState + ", unstepped buttons: ";
 		for (int i = 0; i < buttonIsStepped.Length; i++) {
-			if (!buttonIsStepped[i]) {
+			if (!buttonIsStepped[i] && states[currentState].ButtonInState(i)) {
 				lightCtrl.FlashLED (states[currentState].buttons[i]);
 				string tempStr = i + ", ";
 				str += tempStr;
@@ -101,30 +107,29 @@ public class StateMachine : MonoBehaviour {
 	// Called in State0, when correct button is stepped on
 	// This class handles all state transitions
 	IEnumerator StateTimer () {
-		Debug.Log ("State: " + currentState);
-
 		currentState++;
-		Debug.Log ("State: " + currentState);
 
 		while (currentState != 4) {
 			yield return new WaitForSeconds(stateLength);
 			currentState++;		// STATE CHANGES HERE!!!
 
-			FlashAllUnsteppedButtons();
-
-			if (currentState == 4 && AllButtonsStepped()) {
-				soundMgr.PlayRemix();
-				lightCtrl.RemixLED ();
-			} else if (currentState == 4) {
-				currentState = 1;
+			if (currentState != 4) {
+				FlashAllUnsteppedButtons();
+			} else {
+				if (AllButtonsStepped ()) {
+					Debug.Log("state: remix");
+					soundMgr.PlayRemix();
+					lightCtrl.RemixLED ();
+				} else {
+					currentState = 1;
+					FlashAllUnsteppedButtons();
+				}
 			}
-			Debug.Log ("State: " + currentState);
 		}
 
 		if (currentState == 4) {
 			yield return new WaitForSeconds(remixLength);
 			currentState = 0;
-			Debug.Log ("State: " + currentState);
 			FlashAllUnsteppedButtons();
 		}
 	}

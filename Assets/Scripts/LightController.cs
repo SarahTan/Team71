@@ -12,49 +12,51 @@ public class LightController : MonoBehaviour {
 	private SerialPort led;
 	public bool[] isTouched;
 	//public int[] ledMode;
-	string portName;
-	string macPort = "/dev/cu.usbmodem1421";
-	string windowsPort = "COM1";
+	string portName = "/dev/cu.usbmodem1421";
 	bool portExists = false;
 	
 	// Use this for initialization
 	void Start () {
 		//	For checking if the port even exists before trying to open it
 		string[] ports;
-		if (Application.platform == RuntimePlatform.WindowsEditor) {
-			portName = windowsPort;
-			ports = SerialPort.GetPortNames ();
-		} else {
-			portName = macPort;
+		if (IsOSX()) {
 			ports = GetPortNames();
-		}
-		
-		if (ports.Length > 0) {
-			foreach (String port in ports) {
-				Debug.Log ("Found port " + port);
-				
-				if (port == portName) {
-					portExists = true;
-					led = new SerialPort (portName, 9600);
+
+			if (ports.Length > 0) {
+				foreach (String port in ports) {
+					Debug.Log ("Found port " + port);
 					
-					try {
-						led.Open ();	
-						led.ReadTimeout = 20;
-						Debug.Log ("Successfully opened ledport " + portName);
-					} catch (Exception e) {
-						Debug.LogError ("Cannot open ledport '" + portName + "'! Error: " + e);
+					if (port == portName) {
+						portExists = true;
+						led = new SerialPort (portName, 9600);
+						
+						try {
+							led.Open ();	
+							led.ReadTimeout = 20;
+							Debug.Log ("Successfully opened ledport " + portName);
+						} catch (Exception e) {
+							Debug.LogError ("Cannot open ledport '" + portName + "'! Error: " + e);
+						}
+						
+						break;
 					}
-					
-					break;
 				}
+			} else {
+				Debug.Log("Your computer has no serial ports!");
 			}
-		} else {
-			Debug.Log("Your computer has no serial ports! You need a new one ):<");
 		}
 		
-		InvokeRepeating ("sendLEDStatus",0, 0.2f);
+		InvokeRepeating ("sendLEDStatus", 0, 0.2f);
 	}
-	
+
+	bool IsOSX () {
+		if (Application.platform == RuntimePlatform.OSXEditor ||
+		    Application.platform == RuntimePlatform.OSXPlayer ||
+		    Application.platform == RuntimePlatform.OSXDashboardPlayer) {
+			return true;
+		}
+		return false;
+	}
 	
 	// For OSX, because it's annoying.
 	string[] GetPortNames () {
@@ -86,14 +88,18 @@ public class LightController : MonoBehaviour {
 			data[i]+= ledMode[i];
 //			Debug.Log(ledMode[i]);
 		}
-		if(!led.IsOpen){
-			led.Open();
+
+		if (portExists) {
+			if (!led.IsOpen) {
+				led.Open ();
+			}
+
+			try {
+				led.Write (data, 0, 8);
+			} catch (Exception e) {
+				Debug.LogError ("Cannot write to port! Error: " + e);
+			}		
 		}
-		try {
-			led.Write(data,0,8);
-		} catch (Exception e) {
-			Debug.LogError ("Cannot write to port! Error: " + e);
-		}		
 	}
 
 	public void TurnOnLED (int button) {

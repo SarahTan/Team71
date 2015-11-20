@@ -14,9 +14,7 @@ public class SerialInputController : MonoBehaviour {
 
 	private SerialPort led;
 	private SerialPort sp;
-	string portName;
-	string macPort = "/dev/cu.usbmodem1411";
-	string windowsPort = "COM1";
+	string portName = "/dev/cu.usbmodem1411";
 	bool portExists = false;
 	int [] touchBuffer;
 	int bufferSize = 2;
@@ -25,35 +23,31 @@ public class SerialInputController : MonoBehaviour {
 	void Start () {
 		//	For checking if the port even exists before trying to open it
 		string[] ports;
-		if (Application.platform == RuntimePlatform.WindowsEditor) {
-			portName = windowsPort;
-			ports = SerialPort.GetPortNames ();
-		} else {
-			portName = macPort;
+		if (IsOSX ()) {
 			ports = GetPortNames();
-		}
 
-		if (ports.Length > 0) {
-			foreach (String port in ports) {
-				Debug.Log ("Found port " + port);
-			
-				if (port == portName) {
-					portExists = true;
-					sp = new SerialPort (portName, 9600);
-				
-					try {
-						sp.Open ();	
-						sp.ReadTimeout = 20;
-						Debug.Log ("Successfully opened port " + portName);
-					} catch (Exception e) {
-						Debug.LogError ("Cannot open port '" + portName + "'! Error: " + e);
+			if (ports.Length > 0) {
+				foreach (String port in ports) {
+					Debug.Log ("Found port " + port);
+					
+					if (port == portName) {
+						portExists = true;
+						sp = new SerialPort (portName, 9600);
+						
+						try {
+							sp.Open ();	
+							sp.ReadTimeout = 20;
+							Debug.Log ("Successfully opened port " + portName);
+						} catch (Exception e) {
+							Debug.LogError ("Cannot open port '" + portName + "'! Error: " + e);
+						}
+						
+						break;
 					}
-				
-					break;
 				}
+			} else {
+				Debug.Log("Your computer has no serial ports??");
 			}
-		} else {
-			Debug.Log("Your computer has no serial ports! You need a new one ):<");
 		}
 
 		isTouched = new bool[18];
@@ -65,6 +59,15 @@ public class SerialInputController : MonoBehaviour {
 		}	
 		/////led
 
+	}
+
+	bool IsOSX () {
+		if (Application.platform == RuntimePlatform.OSXEditor ||
+				Application.platform == RuntimePlatform.OSXPlayer ||
+				Application.platform == RuntimePlatform.OSXDashboardPlayer) {
+			return true;
+		}
+		return false;
 	}
 
 	

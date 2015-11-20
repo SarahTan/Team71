@@ -99,8 +99,9 @@ public class SoundManager : MonoBehaviour {
 	}
 
 	public void PlayRemix () {
+		bgm.Stop ();
 		foreach (AudioSource audio in tracks) {
-			audio.volume = 0f;
+			audio.Stop();
 		}
 		remix.Play ();
 	}
@@ -139,7 +140,7 @@ public class SoundManager : MonoBehaviour {
 
 		changingVol [trackNum] = true;
 		while (audio.volume < maxVol) {
-			audio.volume += 0.05f;
+			audio.volume += 0.025f;
 			yield return new WaitForFixedUpdate();
 		}
 		changingVol[trackNum] = false;
@@ -152,7 +153,7 @@ public class SoundManager : MonoBehaviour {
 
 		changingVol[trackNum] = true;
 		while (audio.volume > 0) {
-			audio.volume -= 0.05f;
+			audio.volume -= 0.025f;
 			yield return new WaitForFixedUpdate();
 		}
 		changingVol[trackNum] = false;

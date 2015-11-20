@@ -4,14 +4,14 @@ using System;
 
 public class State {
 
-	public int num;					// What state number this is
+	public int stateNum;					// What state number this is
 	public int numButtons;			// Total number of buttons in this state
 	public int[] buttons;			// The values of the buttons in this state
 
-	public State (int stateNum) {
-		num = stateNum;
+	public State (int num) {
+		stateNum = num;
 
-		switch (num) {
+		switch (stateNum) {
 		case 0:
 			buttons =  new int[]{0};
 			numButtons = 1;

@@ -11,7 +11,7 @@ public class KeyboardController : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		int input = -1;
 		bool stepDown = true;
 
@@ -45,7 +45,7 @@ public class KeyboardController : MonoBehaviour {
 		stepDown = false;
 		if (Input.GetKeyUp ("1")) {
 			input = 0;
-			
+
 		} else if (Input.GetKeyUp ("2")) {
 			input = 1;
 			
