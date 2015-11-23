@@ -16,56 +16,56 @@ public class KeyboardController : MonoBehaviour {
 		bool stepDown = true;
 
 		if (Input.GetKeyDown ("0")) {
-			input = 0;
+			input = 11;
 			
 		} else if (Input.GetKeyDown ("1")) {
-			input = 1;
+			input = 10;
 			
 		} else if (Input.GetKeyDown ("2")) {
 			input = 2;
 			
 		} else if (Input.GetKeyDown ("3")) {
-			input = 3;
+			input = 9;
 			
 		} else if (Input.GetKeyDown ("4")) {
-			input = 4;
+			input = 8;
 			
 		} else if (Input.GetKeyDown ("5")) {
-			input = 5;
+			input = 3;
 
 		} else if (Input.GetKeyDown ("6")) {
-			input = 6;
+			input = 17;
 
 		} else if (Input.GetKeyDown ("7")) {
-			input = 7;
+			input = 16;
 		}
 		SendInput (input, stepDown);
 
 		input = -1;
 		stepDown = false;
 		if (Input.GetKeyUp ("0")) {
-			input = 0;
+			input = 11;
 
 		} else if (Input.GetKeyUp ("1")) {
-			input = 1;
+			input = 10;
 			
 		} else if (Input.GetKeyUp ("2")) {
 			input = 2;
 			
 		} else if (Input.GetKeyUp ("3")) {
-			input = 3;
+			input = 9;
 			
 		} else if (Input.GetKeyUp ("4")) {
-			input = 4;
+			input = 8;
 			
 		} else if (Input.GetKeyUp ("5")) {
-			input = 5;
+			input = 3;
 			
 		} else if (Input.GetKeyUp ("6")) {
-			input = 6;
+			input = 17;
 			
 		} else if (Input.GetKeyUp ("7")) {
-			input = 7;		
+			input = 16;		
 		}
 		SendInput (input, stepDown);
 

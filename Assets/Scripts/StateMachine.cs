@@ -43,11 +43,11 @@ public class StateMachine : MonoBehaviour {
 		int button = 0;
 
 		switch (input) {			
-		case 0:
+		case 11:
 			button = 0;
 			break;
 
-		case 1:
+		case 10:
 			button = 1;
 			break;
 
@@ -55,23 +55,23 @@ public class StateMachine : MonoBehaviour {
 			button = 2;
 			break;
 
-		case 3:
+		case 9:
 			button = 3;
 			break;
 
-		case 4:
+		case 8:
 			button = 4;
 			break;
 		
-		case 5:
+		case 3:
 			button = 5;
 			break;
 
-		case 6:
+		case 17:
 			button = 6;
 			break;
 
-		case 7:
+		case 16:
 			button = 7;
 			break;
 
