@@ -19,8 +19,6 @@ public class SerialInputController : MonoBehaviour {
 	int [] touchBuffer;
 	int bufferSize = 2;
 
-	bool[] isTriggered = new bool[18];
-
 	// Use this for initialization
 	void Start () {
 		//	For checking if the port even exists before trying to open it
@@ -142,8 +140,8 @@ public class SerialInputController : MonoBehaviour {
 		status [17] = ((data [2] >> 1) & 0x01) == 1 ? true : false;
 
 		updateData (status);
-		//debug
-		
+
+		//debug		
 		 string dbg = "";
 		for (int i = 0; i < 18; i++) {
 			dbg += (status[i] ? '1':'0');

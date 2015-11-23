@@ -18,6 +18,7 @@ public class LightController : MonoBehaviour {
 	Transform buttonParent;
 	Material[] buttonMat = new Material[8];
 	bool[] buttonFlashing = new bool[8];
+	bool[] buttonOn = new bool[8];
 	
 	// Use this for initialization
 	void Start () {
@@ -119,13 +120,18 @@ public class LightController : MonoBehaviour {
 			buttonMat[button].SetColor ("_EmissionColor", Color.black);
 			yield return new WaitForSeconds (0.25f);
 		}
-		
-		buttonMat [button].SetColor ("_EmissionColor", Color.white);
+
+		if (buttonOn [button]) {
+			buttonMat [button].SetColor ("_EmissionColor", Color.white);
+		} else {
+			buttonMat [button].SetColor ("_EmissionColor", Color.black);
+		}
 	}
 
 	public void TurnOnLED (int button) {
 		Debug.Log ("LED " + button + " turned on");
 		buttonFlashing [button] = false;
+		buttonOn [button] = true;
 		buttonMat [button].SetColor ("_EmissionColor", Color.white);
 
 		if (button > 7) {
@@ -152,6 +158,7 @@ public class LightController : MonoBehaviour {
 	public void TurnOffLED (int button) {		
 		Debug.Log ("LED " + button + " turned off");
 		buttonFlashing [button] = false;
+		buttonOn [button] = false;
 		buttonMat[button].SetColor ("_EmissionColor", Color.black);
 
 		if (button > 7) {

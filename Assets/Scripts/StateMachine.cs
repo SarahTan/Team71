@@ -8,8 +8,8 @@ public class StateMachine : MonoBehaviour {
 	int currentState = 0;
 	int numStates = 5;
 	State[] states;
-	float stateLength = 8f;
-	float remixLength = 10f;
+	float stateLength = 4f;
+	float remixLength = 20f;
 
 	int numButtons = 8;
 	bool[] readyToTurnOff;
@@ -34,7 +34,7 @@ public class StateMachine : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 
 
@@ -114,7 +114,7 @@ public class StateMachine : MonoBehaviour {
 			yield return new WaitForSeconds(stateLength);
 		}
 
-		while (!AllButtonsStepped ()) {
+		while (!(AllButtonsStepped () || Input.GetKey (KeyCode.R))) {
 			yield return new WaitForSeconds (1f);
 		}
 
@@ -124,7 +124,11 @@ public class StateMachine : MonoBehaviour {
 		lightCtrl.RemixLED ();
 		
 		yield return new WaitForSeconds(remixLength);
+		soundMgr.StopRemix ();
 		currentState = 0;
+		for (int i = 0; i < numButtons; i++) {
+			lightCtrl.TurnOffLED(i);
+		}
 		FlashAllUnsteppedButtons();
 	}
 
@@ -138,10 +142,15 @@ public class StateMachine : MonoBehaviour {
 		buttonTimerInProgress[button] = false;
 
 		// If the button isn't being stepped on after time is up, just stop music
-		if (!buttonIsStepped[button] && currentState < 3) {
+		if (!buttonIsStepped[button] && currentState != 4) {			
 			soundMgr.StopMusic(button);
-			lightCtrl.TurnOffLED (button);
-		}
+
+			if (states[currentState].ButtonInState(button)) {
+				lightCtrl.FlashLED (button);
+			} else {
+				lightCtrl.TurnOffLED (button);
+			}
+		} 
 	}
 
 	// Called by SerialInputController

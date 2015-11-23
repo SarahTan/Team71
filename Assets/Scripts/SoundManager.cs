@@ -13,7 +13,7 @@ public class SoundManager : MonoBehaviour {
 	bool[] changingVol;
 
 	string[] songs;
-	int numSongs = 1;
+	int numSongs = 2;
 	int currentSong;
 
 	// Use this for initialization
@@ -33,7 +33,7 @@ public class SoundManager : MonoBehaviour {
 		tracks = new AudioSource[numTracks];
 		tracks = tracksParent.GetComponentsInChildren<AudioSource> ();
 
-		currentSong = 0;
+		currentSong = 1;
 		ChangeSong (songs [currentSong]);
 		//TestMusic ();
 	}
@@ -107,9 +107,14 @@ public class SoundManager : MonoBehaviour {
 	}
 
 	public void PlayRemix () {
+		StopAllCoroutines ();
+		for (int i = 0; i < numTracks; i++) {
+			changingVol[i] = false;
+		}
+
 		bgm.Stop ();
-		foreach (AudioSource audio in tracks) {
-			audio.Stop();
+		for (int i = 0; i < numTracks; i++) {
+			StartCoroutine (DecreaseVol (tracks[i], i));
 		}
 		remix.Play ();
 	}
@@ -119,9 +124,12 @@ public class SoundManager : MonoBehaviour {
 
 		int nextSong = currentSong;
 
-		while (numSongs != 1 && nextSong == currentSong) {
-			nextSong = Random.Range (0, numSongs);
-		}
+		// To use if we have more than 2 songs
+//		while (numSongs != 1 && nextSong == currentSong) {
+//			nextSong = Random.Range (0, numSongs);
+//		}
+
+		nextSong = (nextSong+1) % 2;
 
 		ChangeSong (songs[nextSong]);
 	}
