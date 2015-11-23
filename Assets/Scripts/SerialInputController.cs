@@ -19,6 +19,8 @@ public class SerialInputController : MonoBehaviour {
 	int [] touchBuffer;
 	int bufferSize = 2;
 
+	bool[] isTriggered = new bool[18];
+
 	// Use this for initialization
 	void Start () {
 		//	For checking if the port even exists before trying to open it
@@ -98,7 +100,8 @@ public class SerialInputController : MonoBehaviour {
 			if (newData[i] != isTouched[i]) {
 				touchBuffer[i]++;
 				if (touchBuffer[i] >= bufferSize) {
-					touchBuffer[i] = 0;
+					touchBuffer[i] = 0;					
+					SendInput (isTouched[i], i);
 					isTouched[i] = newData[i];
 				}
 			} else {
@@ -109,14 +112,17 @@ public class SerialInputController : MonoBehaviour {
 		//debug
 		string dbg = "";
 		for (int i = 0; i < 18; i++) {
-			if (isTouched[i]) {
-				// SEND INPUT TO STATE MACHINE HERE!
-
-
-			}
 			dbg += (isTouched[i] ? '1':'0');
 		}
 		Debug.Log (dbg);
+	}
+
+	void SendInput (bool on, int button) {
+		if (on) {
+			stateMachine.StepOn (button);
+		} else {
+			stateMachine.StepOff (button);
+		}
 	}
 
 	void touchController(string[] s) {

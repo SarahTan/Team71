@@ -107,31 +107,25 @@ public class StateMachine : MonoBehaviour {
 	// Called in State0, when correct button is stepped on
 	// This class handles all state transitions
 	IEnumerator StateTimer () {
-		currentState++;
-
-		while (currentState != 4) {
-			yield return new WaitForSeconds(stateLength);
-			currentState++;		// STATE CHANGES HERE!!!
-
-			if (currentState != 4) {
-				FlashAllUnsteppedButtons();
-			} else {
-				if (AllButtonsStepped ()) {
-					Debug.Log("state: remix");
-					soundMgr.PlayRemix();
-					lightCtrl.RemixLED ();
-				} else {
-					currentState = 1;
-					FlashAllUnsteppedButtons();
-				}
-			}
-		}
-
-		if (currentState == 4) {
-			yield return new WaitForSeconds(remixLength);
-			currentState = 0;
+		// State 1, 2, 3
+		while (currentState < 3) {
+			currentState++;
 			FlashAllUnsteppedButtons();
+			yield return new WaitForSeconds(stateLength);
 		}
+
+		while (!AllButtonsStepped ()) {
+			yield return new WaitForSeconds (1f);
+		}
+
+		Debug.Log("state: remix");
+		currentState++;
+		soundMgr.PlayRemix();
+		lightCtrl.RemixLED ();
+		
+		yield return new WaitForSeconds(remixLength);
+		currentState = 0;
+		FlashAllUnsteppedButtons();
 	}
 
 	IEnumerator ButtonTimer (int button) {
@@ -144,7 +138,7 @@ public class StateMachine : MonoBehaviour {
 		buttonTimerInProgress[button] = false;
 
 		// If the button isn't being stepped on after time is up, just stop music
-		if (!buttonIsStepped[button]) {
+		if (!buttonIsStepped[button] && currentState < 3) {
 			soundMgr.StopMusic(button);
 			lightCtrl.TurnOffLED (button);
 		}
@@ -182,9 +176,12 @@ public class StateMachine : MonoBehaviour {
 
 		if (readyToTurnOff[button]) {
 			soundMgr.StopMusic(button);
-			lightCtrl.TurnOffLED (button);
-		} else if (states[currentState].ButtonInState(button)) {
+		}
+
+		if (states[currentState].ButtonInState(button)) {
 			lightCtrl.FlashLED (button);
+		} else {
+			lightCtrl.TurnOffLED (button);
 		}
 	}
 	

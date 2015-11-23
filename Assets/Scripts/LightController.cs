@@ -14,9 +14,18 @@ public class LightController : MonoBehaviour {
 	//public int[] ledMode;
 	string portName = "/dev/cu.usbmodem1421";
 	bool portExists = false;
+
+	Transform buttonParent;
+	Material[] buttonMat = new Material[8];
+	bool[] buttonFlashing = new bool[8];
 	
 	// Use this for initialization
 	void Start () {
+		buttonParent = GameObject.Find ("Buttons").transform;
+		for (int i = 0; i < 8; i++) {
+			buttonMat[i] = buttonParent.GetChild(i).GetComponent<Renderer>().material;
+		}
+
 		//	For checking if the port even exists before trying to open it
 		string[] ports;
 		if (IsOSX()) {
@@ -102,8 +111,23 @@ public class LightController : MonoBehaviour {
 		}
 	}
 
+	IEnumerator FlashVirtualButton (int button) {
+		while (buttonFlashing[button]) {
+			buttonMat [button].SetColor ("_EmissionColor", Color.white);
+			yield return new WaitForSeconds (0.25f);
+
+			buttonMat[button].SetColor ("_EmissionColor", Color.black);
+			yield return new WaitForSeconds (0.25f);
+		}
+		
+		buttonMat [button].SetColor ("_EmissionColor", Color.white);
+	}
+
 	public void TurnOnLED (int button) {
 		Debug.Log ("LED " + button + " turned on");
+		buttonFlashing [button] = false;
+		buttonMat [button].SetColor ("_EmissionColor", Color.white);
+
 		if (button > 7) {
 			Debug.Log ("TurnOn : wrong index for LED button "+button);
 			return;
@@ -113,6 +137,11 @@ public class LightController : MonoBehaviour {
 
 	public void FlashLED (int button) {		
 		Debug.Log ("LED " + button + " flashing");
+		if (!buttonFlashing [button]) {
+			buttonFlashing [button] = true;
+			StartCoroutine (FlashVirtualButton (button));
+		}
+
 		if (button > 7) {
 			Debug.Log ("Flash : wrong index for LED button "+button);
 			return;
@@ -122,6 +151,9 @@ public class LightController : MonoBehaviour {
 
 	public void TurnOffLED (int button) {		
 		Debug.Log ("LED " + button + " turned off");
+		buttonFlashing [button] = false;
+		buttonMat[button].SetColor ("_EmissionColor", Color.black);
+
 		if (button > 7) {
 			Debug.Log ("TurnOff : wrong index for LED button "+button);
 			return;

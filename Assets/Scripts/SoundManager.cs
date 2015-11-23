@@ -31,9 +31,8 @@ public class SoundManager : MonoBehaviour {
 
 		tracksParent = transform.FindChild ("Tracks");
 		tracks = new AudioSource[numTracks];
-		for (int i = 0; i < numTracks; i++) {
-			tracks[i] = tracksParent.GetChild(i).GetComponent<AudioSource>();
-		}
+		tracks = tracksParent.GetComponentsInChildren<AudioSource> ();
+
 		currentSong = 0;
 		ChangeSong (songs [currentSong]);
 		//TestMusic ();
