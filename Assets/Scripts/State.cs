@@ -18,17 +18,17 @@ public class State {
 			break;
 		
 		case 1:
-			buttons = new int[]{0, 1};
+			buttons = new int[]{0, 1, 2, 3};
 			numButtons = 2;
 			break;
 
 		case 2:
-			buttons = new int[]{0, 1, 2};
+			buttons = new int[]{0, 1, 2, 3, 4, 5};
 			numButtons = 3;
 			break;
 
 		case 3:
-			buttons = new int[]{0, 1, 2, 3};
+			buttons = new int[]{0, 1, 2, 3, 4, 5, 6, 7};
 			numButtons = 4;
 			break;
 

@@ -8,10 +8,10 @@ public class StateMachine : MonoBehaviour {
 	int currentState = 0;
 	int numStates = 5;
 	State[] states;
-	float stateLength = 4f;
+	float stateLength = 8f;
 	float remixLength = 10f;
 
-	int numButtons = 4;
+	int numButtons = 8;
 	bool[] readyToTurnOff;
 	bool[] buttonTimerInProgress;
 	bool[] buttonIsStepped;
@@ -183,7 +183,7 @@ public class StateMachine : MonoBehaviour {
 		if (readyToTurnOff[button]) {
 			soundMgr.StopMusic(button);
 			lightCtrl.TurnOffLED (button);
-		} else {
+		} else if (states[currentState].ButtonInState(button)) {
 			lightCtrl.FlashLED (button);
 		}
 	}

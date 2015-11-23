@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SoundManager : MonoBehaviour {
 
-	int numTracks = 6;
+	int numTracks = 8;
 	Transform tracksParent;
 	AudioSource bgm;
 	AudioSource feedback;
@@ -36,6 +36,7 @@ public class SoundManager : MonoBehaviour {
 		}
 		currentSong = 0;
 		ChangeSong (songs [currentSong]);
+		//TestMusic ();
 	}
 	
 	// Update is called once per frame
@@ -70,6 +71,14 @@ public class SoundManager : MonoBehaviour {
 			
 		case 16:
 			trackNum = 5;
+			break;
+
+		case 15:
+			trackNum = 6;
+			break;
+
+		case 14:
+			trackNum = 7;
 			break;
 
 		default:
@@ -118,6 +127,12 @@ public class SoundManager : MonoBehaviour {
 		ChangeSong (songs[nextSong]);
 	}
 
+	void TestMusic () {
+		foreach (AudioSource track in tracks) {
+			track.volume = 1f;
+		}
+	}
+
 	void ChangeSong (string folder) {
 		AudioClip[] clips = Resources.LoadAll<AudioClip> (folder);
 
@@ -140,7 +155,7 @@ public class SoundManager : MonoBehaviour {
 
 		changingVol [trackNum] = true;
 		while (audio.volume < maxVol) {
-			audio.volume += 0.025f;
+			audio.volume += 0.01f;
 			yield return new WaitForFixedUpdate();
 		}
 		changingVol[trackNum] = false;
@@ -153,7 +168,7 @@ public class SoundManager : MonoBehaviour {
 
 		changingVol[trackNum] = true;
 		while (audio.volume > 0) {
-			audio.volume -= 0.025f;
+			audio.volume -= 0.01f;
 			yield return new WaitForFixedUpdate();
 		}
 		changingVol[trackNum] = false;
