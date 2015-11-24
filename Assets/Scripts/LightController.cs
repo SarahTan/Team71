@@ -56,7 +56,7 @@ public class LightController : MonoBehaviour {
 			}
 		}
 		
-		InvokeRepeating ("sendLEDStatus", 0, 0.2f);
+		InvokeRepeating ("sendLEDStatus", 0, 0.1f);
 	}
 
 	bool IsOSX () {

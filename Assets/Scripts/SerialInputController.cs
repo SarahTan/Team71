@@ -99,8 +99,10 @@ public class SerialInputController : MonoBehaviour {
 				touchBuffer[i]++;
 				if (touchBuffer[i] >= bufferSize) {
 					touchBuffer[i] = 0;					
-					SendInput (isTouched[i], i);
+
+					//Debug.Log(i+"!!!!!!!");
 					isTouched[i] = newData[i];
+					SendInput (isTouched[i], i);
 				}
 			} else {
 				touchBuffer[i] = 0;		
@@ -112,14 +114,17 @@ public class SerialInputController : MonoBehaviour {
 		for (int i = 0; i < 18; i++) {
 			dbg += (isTouched[i] ? '1':'0');
 		}
-		Debug.Log (dbg);
+		//Debug.Log (dbg);
 	}
 
 	void SendInput (bool on, int button) {
+
 		if (on) {
 			stateMachine.StepOn (button);
+			Debug.Log("ON!!");
 		} else {
 			stateMachine.StepOff (button);
+			Debug.Log("OFF!!");
 		}
 	}
 
@@ -146,7 +151,7 @@ public class SerialInputController : MonoBehaviour {
 		for (int i = 0; i < 18; i++) {
 			dbg += (status[i] ? '1':'0');
 		}
-		Debug.Log (dbg);	
+		//Debug.Log (dbg);	
 	}	
 	
 	void FixedUpdate () {
@@ -157,7 +162,7 @@ public class SerialInputController : MonoBehaviour {
 
 			try {
 				string received = sp.ReadLine ();
-				Debug.Log(received);
+				//Debug.Log(received);
 				string[] words = sp.ReadLine ().Split ('\t', '\r');
 				//Debug.Log(sp.ReadLine());
 
@@ -166,7 +171,7 @@ public class SerialInputController : MonoBehaviour {
 				}
 			} catch (Exception e) {
 				if (Application.platform != RuntimePlatform.WindowsEditor) {
-					Debug.LogError ("Cannot read from port '" + portName + "'! Error: " + e);
+					//Debug.LogError ("Cannot read from port '" + portName + "'! Error: " + e);
 				}
 			}
 
