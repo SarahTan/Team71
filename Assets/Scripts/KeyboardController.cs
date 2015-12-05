@@ -38,6 +38,21 @@ public class KeyboardController : MonoBehaviour {
 
 		} else if (Input.GetKeyDown ("7")) {
 			input = 16;
+
+		} else if (Input.GetKeyDown ("a")) {
+			input = 18;
+			
+		} else if (Input.GetKeyDown ("s")) {
+			input = 19;
+			
+		} else if (Input.GetKeyDown ("d")) {
+			input = 20;
+			
+		} else if (Input.GetKeyDown ("f")) {
+			input = 21;
+			
+		} else if (Input.GetKeyDown ("g")) {
+			input = 22;
 		}
 		SendInput (input, stepDown);
 
