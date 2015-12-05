@@ -118,7 +118,6 @@ public class SerialInputController : MonoBehaviour {
 	}
 
 	void SendInput (bool on, int button) {
-
 		if (on) {
 			stateMachine.StepOn (button);
 			Debug.Log("ON!!");

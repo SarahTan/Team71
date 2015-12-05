@@ -18,7 +18,7 @@ int keyCodes[NUM_INPUTS] = {
   0,    // up arrow pad
   0,    // down arrow pad
   'h',    // left arrow pad
-  0,    // right arrow pad
+  'p',    // right arrow pad
   0,    // space button pad
   0,    // click button pad
   
@@ -31,18 +31,18 @@ int keyCodes[NUM_INPUTS] = {
   'g',    // pin D0  was 'g'
   
   // female header on the back right side
-  0,    // pin A5
-  0,    // pin A4
-  0,    // pin A3
-  0, // pin A2
-  0, // pin A1
-  0  // pin A0
+  'e',    // pin A5
+  'r',    // pin A4
+  't',    // pin A3
+  'y', // pin A2
+  'u', // pin A1
+  'i'  // pin A0
 };
 
 ///////////////////////////
 // NOISE CANCELLATION /////
 ///////////////////////////
-#define SWITCH_THRESHOLD_OFFSET_PERC  5    // number between 1 and 49
+#define SWITCH_THRESHOLD_OFFSET_PERC  40    // number between 1 and 49
                                            // larger value protects better against noise oscillations, but makes it harder to press and release
                                            // recommended values are between 2 and 20
                                            // default value is 5

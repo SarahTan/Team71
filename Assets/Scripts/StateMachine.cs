@@ -8,7 +8,7 @@ public class StateMachine : MonoBehaviour {
 	int currentState = 0;
 	int numStates = 5;
 	State[] states;
-	float stateLength = 12f;
+	float stateLength = 16f;
 	float remixLength = 20f;
 
 	int numButtons = 8;
@@ -188,7 +188,7 @@ public class StateMachine : MonoBehaviour {
 		}
 
 		if (states[currentState].ButtonInState(button)) {
-			lightCtrl.FlashLED (button);
+			//lightCtrl.FlashLED (button);
 		} else {
 			lightCtrl.TurnOffLED (button);
 		}
