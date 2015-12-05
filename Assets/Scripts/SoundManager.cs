@@ -43,51 +43,8 @@ public class SoundManager : MonoBehaviour {
 
 	}
 
-	// CALL THIS FUNCTION
-	public void SendInput (int input) {
-		int trackNum = -1;
+	public void TriggerAudioEffect () {
 
-		switch (input) {
-		case 11:
-			trackNum = 0;
-			break;
-
-		case 10:
-			trackNum = 1;
-			break;
-
-		case 9:
-			trackNum = 2;
-			break;
-			
-		case 8:
-			trackNum = 3;
-			break;
-
-		case 17:
-			trackNum = 4;
-			break;
-			
-		case 16:
-			trackNum = 5;
-			break;
-
-		case 15:
-			trackNum = 6;
-			break;
-
-		case 14:
-			trackNum = 7;
-			break;
-
-		default:
-			break;
-		}
-
-		if (trackNum != -1 && tracks [trackNum].volume == 0f) {
-			feedback.Play();
-			StartCoroutine (IncreaseVol (tracks[trackNum], trackNum));
-		}
 	}
 
 	public void PlayFeedback () {
@@ -95,6 +52,13 @@ public class SoundManager : MonoBehaviour {
 	}
 
 	public void StartMusic (int trackNum) {
+		// For testing
+//		if (tracks [trackNum].volume == 0f) {
+//			tracks [trackNum].volume = 1f;
+//		} else if (tracks [trackNum].volume == 1f) {
+//			tracks [trackNum].volume = 0f;
+//		}
+
 		if (tracks [trackNum].volume == 0f) {
 			StartCoroutine (IncreaseVol (tracks [trackNum], trackNum));
 		}
@@ -169,6 +133,7 @@ public class SoundManager : MonoBehaviour {
 	}
 
 	IEnumerator DecreaseVol (AudioSource audio, int trackNum) {
+		yield return null;
 		while (changingVol[trackNum]) {
 			yield return new WaitForFixedUpdate();
 		}
