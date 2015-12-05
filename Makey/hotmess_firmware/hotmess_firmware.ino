@@ -31,7 +31,7 @@
 ////////////////////////
 // DEFINED CONSTANTS////
 ////////////////////////
-
+#define NOISE_FILTER     300
 #define BUFFER_LENGTH    3     // 3 bytes gives us 24 samples
 #define NUM_INPUTS       18    // 6 on the front + 12 on the back
 #define NUM_OUTPUTKEYS   18   // 
@@ -47,11 +47,13 @@
 typedef struct {
   byte pinNumber;
   int keyCode;
+  int bufferNoise;
   byte measurementBuffer[BUFFER_LENGTH]; 
   boolean oldestMeasurement;
   byte bufferSum;
   boolean pressed;
   boolean prevPressed;
+  boolean prevReleased;
 } MakeyMakeyInput;
 
 MakeyMakeyInput inputs[NUM_INPUTS];
@@ -93,7 +95,7 @@ void updateOutputStates();
 void addDelay();
 void cycleLEDs();
 void updateOutLEDs();
-
+void noiseCounter();
 ////////////////////
 // MAIN LOOP ///////
 ////////////////////
@@ -107,6 +109,7 @@ void loop()
   cycleLEDs();
   updateOutLEDs();
   addDelay();
+  noiseCounter();
   //delay(20);
 }
 
@@ -164,7 +167,11 @@ void initializeInputs() {
     inputs[i].pinNumber = pinNumbers[i];
     inputs[i].keyCode = keyCodes[i];
     outputKeys[i].keyCode=keyCodes[i];
-
+    outputKeys[i].pressed = false;
+    outputKeys[i].prevPressed = false;
+    outputKeys[i].prevReleased=false;
+    outputKeys[i].bufferNoise=0;
+   // outputKeys[i].bufferRelease=1;
     for (int j=0; j<BUFFER_LENGTH; j++) {
       inputs[i].measurementBuffer[j] = 0;
     }
@@ -172,6 +179,7 @@ void initializeInputs() {
     inputs[i].bufferSum = 0;
     inputs[i].pressed = false;
     inputs[i].prevPressed = false;
+    inputs[i].prevReleased=false;
 #ifdef DEBUG
     Serial.println(i);
 #endif
@@ -304,7 +312,7 @@ void updateOutputStates() {
   for (int i=0; i<NUM_OUTPUTKEYS; i++) {
   	if(i>7 && i<16)arrayIndex=1;
         if(i>15)arrayIndex=2;
-    outputKeys[i].prevPressed = outputKeys[i].pressed;
+    //outputKeys[i].prevPressed = outputKeys[i].pressed;
     if(inputs[i].pressed)
     {
         
@@ -341,21 +349,41 @@ void updateOutputStates() {
   Serial.flush();
   //key
     for (int i=0; i<NUM_OUTPUTKEYS; i++) {
-    if (outputKeys[i].keyCode!=0 && outputKeys[i].prevPressed && !outputKeys[i].pressed) {
-      Keyboard.release(outputKeys[i].keyCode);
+      if (outputKeys[i].keyCode!=0 && outputKeys[i].prevPressed && !outputKeys[i].prevReleased) {
+        Keyboard.release(outputKeys[i].keyCode);
+        outputKeys[i].prevReleased=true;
+      }
+      if(outputKeys[i].keyCode!=0  && outputKeys[i].prevPressed && !outputKeys[i].pressed){
+       
+        if(outputKeys[i].bufferNoise==0){
+          outputKeys[i].prevReleased=false;
+          outputKeys[i].prevPressed=false;
+        }
+        outputKeys[i].bufferNoise=NOISE_FILTER;
+      }
     }
-  }
+  
   
   // Enable any presses that are now freshly valid.
   for (int i=0; i<NUM_OUTPUTKEYS; i++) {
-    if (outputKeys[i].keyCode!=0 && !outputKeys[i].prevPressed && outputKeys[i].pressed) {
-      Keyboard.press(outputKeys[i].keyCode);
+    if(outputKeys[i].keyCode!=0 && !outputKeys[i].prevPressed  && outputKeys[i].pressed ){
+        if(outputKeys[i].bufferNoise==0){
+          Keyboard.press(outputKeys[i].keyCode);
+          outputKeys[i].prevPressed=true; 
+        }
+        outputKeys[i].bufferNoise=NOISE_FILTER;
     }
   }
   
 
 }
-
+void noiseCounter(){
+  for (int i=0; i<NUM_OUTPUTKEYS; i++) {
+      if(outputKeys[i].bufferNoise){
+         outputKeys[i].bufferNoise--;
+      }
+  }
+}
 void updateOutLEDs()
 {
   boolean keyPressed = 0;

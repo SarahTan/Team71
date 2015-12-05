@@ -12,7 +12,7 @@ public class LightController : MonoBehaviour {
 	private SerialPort led;
 	public bool[] isTouched;
 	//public int[] ledMode;
-	string portName = "/dev/cu.usbmodem1421";
+	string portName = "/dev/cu.usbmodem1451";
 	bool portExists = false;
 
 	Transform buttonParent;

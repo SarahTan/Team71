@@ -45,6 +45,7 @@ public class SoundManager : MonoBehaviour {
 
 	public void TriggerAudioEffect () {
 
+			StartCoroutine (IncreaseVol (tracks[trackNum], trackNum));
 	}
 
 	public void PlayFeedback () {
