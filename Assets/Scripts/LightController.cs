@@ -129,7 +129,6 @@ public class LightController : MonoBehaviour {
 	}
 
 	public void TurnOnLED (int button) {
-		Debug.Log ("LED " + button + " turned on");
 		buttonFlashing [button] = false;
 		buttonOn [button] = true;
 		buttonMat [button].SetColor ("_EmissionColor", Color.white);
@@ -141,8 +140,7 @@ public class LightController : MonoBehaviour {
 		ledMode [button] = 1;
 	}
 
-	public void FlashLED (int button) {		
-		Debug.Log ("LED " + button + " flashing");
+	public void FlashLED (int button) {
 		if (!buttonFlashing [button]) {
 			buttonFlashing [button] = true;
 			StartCoroutine (FlashVirtualButton (button));
@@ -155,8 +153,7 @@ public class LightController : MonoBehaviour {
 		ledMode [button] = 2;
 	}
 
-	public void TurnOffLED (int button) {		
-		Debug.Log ("LED " + button + " turned off");
+	public void TurnOffLED (int button) {
 		buttonFlashing [button] = false;
 		buttonOn [button] = false;
 		buttonMat[button].SetColor ("_EmissionColor", Color.black);
@@ -169,7 +166,6 @@ public class LightController : MonoBehaviour {
 	}
 
 	public void RemixLED () {
-		Debug.Log ("LEDs remixing!");
 		for(int i=0;i<8;i++)
 		ledMode [i] = 6;
 	}

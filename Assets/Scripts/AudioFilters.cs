@@ -8,7 +8,6 @@ public class AudioFilters : MonoBehaviour {
 
 	int numTracks = 9;
 	float effectDuration = 8f;
-	int currentEffect = 0;
 	GameObject[] sources;
 
 	Chorus[] chorusEffects;
@@ -17,7 +16,7 @@ public class AudioFilters : MonoBehaviour {
 	HPF[] HPFEffects;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		sources = new GameObject[numTracks];
 		chorusEffects = new Chorus[numTracks];
 		echoEffects = new Echo[numTracks];
@@ -29,7 +28,6 @@ public class AudioFilters : MonoBehaviour {
 			sources[i] = tracks.GetChild(i).gameObject;
 		}		
 		sources [sources.Length-1] = transform.GetChild (0).gameObject;		// BGM
-		LoadData ("AudioEffects");
 	}
 	
 	// Update is called once per frame
@@ -79,7 +77,6 @@ public class AudioFilters : MonoBehaviour {
 			source.GetComponent<AudioLowPassFilter>().enabled = false;
 			source.GetComponent<AudioReverbFilter>().enabled = false;
 		}
-		currentEffect = 0;
 	}
 
 
@@ -148,8 +145,8 @@ public class AudioFilters : MonoBehaviour {
 		}
 	}
 
-	void LoadData (string fileName) {
-		string[] line = Resources.Load<TextAsset> (fileName).text.Split ('\n');
+	public void LoadParams (TextAsset filterParams) {
+		string[] line = filterParams.text.Split ('\n');
 		int readLine = 0;
 
 		do {

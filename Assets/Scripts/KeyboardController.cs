@@ -4,12 +4,10 @@ using System.Collections;
 public class KeyboardController : MonoBehaviour {
 
 	StateMachine stateMachine;
-	AudioFilters filters;
 
 	// Use this for initialization
 	void Start () {
 		stateMachine = gameObject.GetComponent<StateMachine> ();
-		filters = GameObject.Find ("Sound Manager").GetComponent<AudioFilters> ();
 	}
 	
 	// Update is called once per frame

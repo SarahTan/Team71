@@ -4,7 +4,6 @@ using System.Collections;
 public class StateMachine : MonoBehaviour {
 
 	SoundManager soundMgr;
-	AudioFilters filter;
 	LightController lightCtrl;
 	int currentState = 0;
 	int numStates = 5;
@@ -24,7 +23,6 @@ public class StateMachine : MonoBehaviour {
 		buttonIsStepped = new bool[numButtons];
 
 		soundMgr = GameObject.Find ("Sound Manager").GetComponent<SoundManager>();
-		filter = GameObject.Find ("Sound Manager").GetComponent<AudioFilters>();
 		lightCtrl = GameObject.Find ("Light Controller").GetComponent<LightController> ();
 
 		states = new State[numStates];
@@ -150,7 +148,6 @@ public class StateMachine : MonoBehaviour {
 		
 		yield return new WaitForSeconds(remixLength);
 		soundMgr.StopRemix ();
-		filter.TurnOff ();
 		currentState = 0;
 		for (int i = 0; i < numButtons; i++) {
 			lightCtrl.TurnOffLED(i);
@@ -205,7 +202,7 @@ public class StateMachine : MonoBehaviour {
 				}
 			}
 		} else if (button >= 8 && button <= 12) {
-			filter.Trigger(button);
+			soundMgr.TriggerFilter(button);
 		}
 	}
 	

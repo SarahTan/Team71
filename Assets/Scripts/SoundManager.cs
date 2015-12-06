@@ -11,13 +11,20 @@ public class SoundManager : MonoBehaviour {
 	AudioSource[] tracks;
 	float maxVol = 1f;
 	bool[] changingVol;
+	
+	AudioFilters filters;
+	TextAsset[] filterParams;
 
 	string[] songs;
 	int numSongs = 2;
 	int currentSong;
 
 	// Use this for initialization
-	void Start () {
+	void Start () {		
+		filters = GameObject.Find ("Sound Manager").GetComponent<AudioFilters>();
+		filterParams = new TextAsset[numSongs];
+		filterParams = Resources.LoadAll<TextAsset> ("Filters");
+
 		changingVol = new bool[numTracks];
 
 		songs = new string[numSongs];
@@ -47,6 +54,10 @@ public class SoundManager : MonoBehaviour {
 		feedback.Play();
 	}
 
+	public void TriggerFilter (int orb) {
+		filters.Trigger (orb);
+	}
+
 	public void StartMusic (int trackNum) {
 		// For testing
 //		if (tracks [trackNum].volume == 0f) {
@@ -73,6 +84,8 @@ public class SoundManager : MonoBehaviour {
 		}
 
 		bgm.Stop ();
+
+		// Fade out so there's no awkward silence
 		for (int i = 0; i < numTracks; i++) {
 			StartCoroutine (DecreaseVol (tracks[i], i));
 		}
@@ -101,9 +114,12 @@ public class SoundManager : MonoBehaviour {
 	}
 
 	void ChangeSong (string folder) {
+		filters.TurnOff ();
+		filters.LoadParams (filterParams[currentSong]);
 		AudioClip[] clips = Resources.LoadAll<AudioClip> (folder);
 
 		for (int i = 0; i < tracks.Length; i++) {
+			tracks[i].Stop();
 			tracks[i].clip = clips[i];
 			tracks[i].volume = 0f;
 			tracks[i].Play();
