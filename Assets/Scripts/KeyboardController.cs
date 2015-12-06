@@ -4,10 +4,12 @@ using System.Collections;
 public class KeyboardController : MonoBehaviour {
 
 	StateMachine stateMachine;
+	AudioFilters filters;
 
 	// Use this for initialization
 	void Start () {
 		stateMachine = gameObject.GetComponent<StateMachine> ();
+		filters = GameObject.Find ("Sound Manager").GetComponent<AudioFilters> ();
 	}
 	
 	// Update is called once per frame
@@ -40,19 +42,19 @@ public class KeyboardController : MonoBehaviour {
 			input = 16;
 
 		} else if (Input.GetKeyDown ("a")) {
-			input = 18;
+			input = 0;
 			
 		} else if (Input.GetKeyDown ("s")) {
-			input = 19;
+			input = 15;
 			
 		} else if (Input.GetKeyDown ("d")) {
-			input = 20;
+			input = 14;
 			
 		} else if (Input.GetKeyDown ("f")) {
-			input = 21;
+			input = 13;
 			
 		} else if (Input.GetKeyDown ("g")) {
-			input = 22;
+			input = 12;
 		}
 		SendInput (input, stepDown);
 

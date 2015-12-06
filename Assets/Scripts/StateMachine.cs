@@ -4,6 +4,7 @@ using System.Collections;
 public class StateMachine : MonoBehaviour {
 
 	SoundManager soundMgr;
+	AudioFilters filter;
 	LightController lightCtrl;
 	int currentState = 0;
 	int numStates = 5;
@@ -23,6 +24,7 @@ public class StateMachine : MonoBehaviour {
 		buttonIsStepped = new bool[numButtons];
 
 		soundMgr = GameObject.Find ("Sound Manager").GetComponent<SoundManager>();
+		filter = GameObject.Find ("Sound Manager").GetComponent<AudioFilters>();
 		lightCtrl = GameObject.Find ("Light Controller").GetComponent<LightController> ();
 
 		states = new State[numStates];
@@ -42,7 +44,8 @@ public class StateMachine : MonoBehaviour {
 	int ButtonMapping (int input) {
 		int button = 0;
 
-		switch (input) {			
+		switch (input) {	
+		// Floor buttons
 		case 11:
 			button = 0;
 			break;
@@ -75,7 +78,29 @@ public class StateMachine : MonoBehaviour {
 			button = 7;
 			break;
 
+		// Orb buttons
+		case 0:
+			button = 8;
+			break;
+
+		case 15:
+			button = 9;
+			break;
+
+		case 14:
+			button = 10;
+			break;
+
+		case 13:
+			button = 11;
+			break;
+
+		case 12:
+			button = 12;
+			break;
+
 		default:
+			button = -1;
 			break;
 		}
 
@@ -125,6 +150,7 @@ public class StateMachine : MonoBehaviour {
 		
 		yield return new WaitForSeconds(remixLength);
 		soundMgr.StopRemix ();
+		filter.TurnOff ();
 		currentState = 0;
 		for (int i = 0; i < numButtons; i++) {
 			lightCtrl.TurnOffLED(i);
@@ -156,41 +182,49 @@ public class StateMachine : MonoBehaviour {
 	// Called by SerialInputController
 	public void StepOn (int input) {
 		int button = ButtonMapping (input);
-		buttonIsStepped[button] = true;
 
-		if (currentState != 4) {
-			soundMgr.PlayFeedback ();
+		if (button >= 0 && button <= 7) {
+			buttonIsStepped [button] = true;
 
-			// Check if button is in state and is not currently being stepped on
-			if (states [currentState].ButtonInState (button) && buttonIsStepped[button]) {
+			if (currentState != 4) {
+				soundMgr.PlayFeedback ();
+
+				// Check if button is in state and is not currently being stepped on
+				if (states [currentState].ButtonInState (button) && buttonIsStepped [button]) {
 				
-				// Start timers
-				if (!buttonTimerInProgress [button]) {
-					StartCoroutine (ButtonTimer (button));
-				}			
-				if (currentState == 0) {
-					StartCoroutine (StateTimer ());
+					// Start timers
+					if (!buttonTimerInProgress [button]) {
+						StartCoroutine (ButtonTimer (button));
+					}			
+					if (currentState == 0) {
+						StartCoroutine (StateTimer ());
+					}
+				
+					soundMgr.StartMusic (button);
+					lightCtrl.TurnOnLED (button);
 				}
-				
-				soundMgr.StartMusic (button);
-				lightCtrl.TurnOnLED (button);
 			}
+		} else if (button >= 8 && button <= 12) {
+			filter.Trigger(button);
 		}
 	}
 	
 	// Called by SerialInputController
 	public void StepOff (int input) {
 		int button = ButtonMapping (input);
-		buttonIsStepped[button] = false;
 
-		if (readyToTurnOff[button]) {
-			soundMgr.StopMusic(button);
-		}
+		if (button >= 0 && button <= 7) {
+			buttonIsStepped [button] = false;
 
-		if (states[currentState].ButtonInState(button)) {
-			//lightCtrl.FlashLED (button);
-		} else {
-			lightCtrl.TurnOffLED (button);
+			if (readyToTurnOff [button]) {
+				soundMgr.StopMusic (button);
+			}
+
+			if (states [currentState].ButtonInState (button)) {
+				//lightCtrl.FlashLED (button);
+			} else {
+				lightCtrl.TurnOffLED (button);
+			}
 		}
 	}
 	

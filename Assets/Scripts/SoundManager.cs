@@ -43,10 +43,6 @@ public class SoundManager : MonoBehaviour {
 
 	}
 
-	public void TriggerAudioEffect () {
-
-	}
-
 	public void PlayFeedback () {
 		feedback.Play();
 	}
