@@ -1,61 +1,88 @@
 ***** Chorus *****
 # 0
-mixes: 0.5
+drymix: 0.5
+wetmix1: 0.2
+wetmix2: 0.2
+wetmix3: 0.5
 delay: 40
-rate: 5
+rate: 3
 depth: 0.5
 
 # 1
-mixes: 1
+drymix: 1
+wetmix1: 0.4
+wetmix2: 0.4
+wetmix2: 0.4
 delay: 40
 rate: 20
-depth: 1
+depth: 0.5
 
 # 2
-mixes: 0.5
-delay: 40
-rate: 3
-depth: 0.75
-
-# 3
-mixes: 0.5
+drymix: 0.5
+wetmix1: 0.5
+wetmix2: 0.5
+wetmix3: 0.5
 delay: 40
 rate: 20
 depth: 1
 
-# 4
-mixes: 0.5
+# 3
+drymix: 0.5
+wetmix1: 0.4
+wetmix2: 0.4
+wetmix3: 0.4
 delay: 40
-rate: 5
-depth: 0.65
+rate: 20
+depth: 0.5
+
+# 4
+drymix: 0.5
+wetmix1: 0.5
+wetmix2: 0.5
+wetmix3: 0.5
+delay: 40
+rate: 10
+depth: 0.5
 
 # 5
-mixes: 0.5
+drymix: 0.5
+wetmix1: 0.2
+wetmix2: 0.2
+wetmix3: 0.2
 delay: 40
 rate: 10
 depth: 0.5
 
 # 6
-mixes: 1
+drymix: 1
+wetmix1: 1
+wetmix2: 1
+wetmix2: 1
 delay: 40
 rate: 20
 depth: 1
 
 # 7
-mixes: 0.5
+drymix: 0.5
+wetmix1: 0.2
+wetmix2: 0.2
+wetmix3: 0.2
 delay: 40
-rate: 8
-depth: 0.75
+rate: 10
+depth: 0.5
 
 # BGM
-mixes: 0.5
+drymix: 1
+wetmix1: 0.1
+wetmix2: 0.1
+wetmix3: 0.5
 delay: 40
 rate: 20
-depth: 0.5
+depth: 1
 
 ***** Echo *****
 # 0
-delay: 500
+delay: 100
 decay: 0.5
 wet: 1
 dry: 1
@@ -67,15 +94,15 @@ wet: 1
 dry: 1
 
 # 2
-delay: 250
-decay: 0.5
-wet: 1
-dry: 1
-
-# 3
 delay: 125
 decay: 0.5
 wet: 0.5
+dry: 1
+
+# 3
+delay: 250
+decay: 0.5
+wet: 1
 dry: 1
 
 # 4
@@ -85,7 +112,7 @@ wet: 1
 dry: 1
 
 # 5
-delay: 250
+delay: 65
 decay: 0.5
 wet: 1
 dry: 1
@@ -97,7 +124,7 @@ wet: 0.5
 dry: 1
 
 # 7
-delay: 250
+delay: 65
 decay: 0.5
 wet: 1
 dry: 1
@@ -110,34 +137,34 @@ dry: 1
 
 ***** LPF *****
 # 0
-cutoff: 1500
+cutoff: 2000
 resonance: 10
 reverb: 0
 
 # 1
-cutoff: 2000
+cutoff: 800
 resonance: 5
 reverb: 1
 
 # 2
-cutoff: 425
-resonance: 3
-reverb: 1
-
-# 3
 cutoff: 225
 resonance: 7
 reverb: 0
 
-# 4
-cutoff: 500
-resonance: 3
+# 3
+cutoff: 1500
+resonance: 7
 reverb: 1
 
-# 5
+# 4
 cutoff: 150
 resonance: 7
 reverb: 0
+
+# 5
+cutoff: 3000
+resonance: 5
+reverb: 1
 
 # 6
 cutoff: 1000
@@ -150,7 +177,7 @@ resonance: 5
 reverb: 1
 
 # BGM
-cutoff: 180
+cutoff: 500
 resonance: 0
 reverb: 0
 
@@ -162,7 +189,7 @@ reverb: 1
 echo: 0
 
 # 1
-cutoff: 2000
+cutoff: 500
 resonance: 5
 reverb: 1
 echo: 1
@@ -173,32 +200,27 @@ echo: 1
 > dry: 0.25
 
 # 2
-cutoff: 1500
-resonance: 8
-reverb: 1
-echo: 1
-># Echo 2
-> delay: 250
-> decay: 0.25
-> wet: 0.5
-> dry: 0.25
-
-# 3
 cutoff: 300
 resonance: 8
 reverb: 0
 echo: 0
 
-# 4
-cutoff: 2000
+# 3
+cutoff: 3000
 resonance: 10
 reverb: 1
 echo: 0
 
-# 5
+# 4
 cutoff: 250
 resonance: 5
 reverb: 2
+echo: 0
+
+# 5
+cutoff: 3000
+resonance: 5
+reverb: 1
 echo: 0
 
 # 6
@@ -208,15 +230,15 @@ reverb: 1
 echo: 0
 
 # 7
-cutoff: 1250
-resonance: 8
+cutoff: 3000
+resonance: 5
 reverb: 1
 echo: 0
 
 # BGM
-cutoff: 10
-resonance: 1
-reverb: 0
+cutoff: 600
+resonance: 10
+reverb: 1
 echo: 0
 
 *****

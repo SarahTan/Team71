@@ -1,54 +1,81 @@
 ***** Chorus *****
 # 0
-mixes: 0.5
+drymix: 0.5
+wetmix1: 0.5
+wetmix2: 0.5
+wetmix3: 0.5
 delay: 40
 rate: 5
 depth: 0.5
 
 # 1
-mixes: 1
+drymix: 1
+wetmix1: 1
+wetmix2: 1
+wetmix2: 1
 delay: 40
 rate: 20
 depth: 1
 
 # 2
-mixes: 0.5
+drymix: 0.5
+wetmix1: 0.5
+wetmix2: 0.5
+wetmix3: 0.5
 delay: 40
 rate: 3
 depth: 0.75
 
 # 3
-mixes: 0.5
+drymix: 0.5
+wetmix1: 0.5
+wetmix2: 0.5
+wetmix3: 0.5
 delay: 40
 rate: 20
 depth: 1
 
 # 4
-mixes: 0.5
+drymix: 0.5
+wetmix1: 0.5
+wetmix2: 0.5
+wetmix3: 0.5
 delay: 40
 rate: 5
 depth: 0.65
 
 # 5
-mixes: 0.5
+drymix: 0.5
+wetmix1: 0.5
+wetmix2: 0.5
+wetmix3: 0.5
 delay: 40
 rate: 10
 depth: 0.5
 
 # 6
-mixes: 1
+drymix: 1
+wetmix1: 1
+wetmix2: 1
+wetmix2: 1
 delay: 40
 rate: 20
 depth: 1
 
 # 7
-mixes: 0.5
+drymix: 0.5
+wetmix1: 0.5
+wetmix2: 0.5
+wetmix3: 0.5
 delay: 40
 rate: 8
 depth: 0.75
 
 # BGM
-mixes: 0.5
+drymix: 0.5
+wetmix1: 0.5
+wetmix2: 0.5
+wetmix3: 0.5
 delay: 40
 rate: 20
 depth: 0.5

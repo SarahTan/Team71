@@ -40,7 +40,7 @@ public class SoundManager : MonoBehaviour {
 		tracks = new AudioSource[numTracks];
 		tracks = tracksParent.GetComponentsInChildren<AudioSource> ();
 
-		currentSong = 1;
+		currentSong = 0;
 		ChangeSong (songs [currentSong]);
 		//TestMusic ();
 	}

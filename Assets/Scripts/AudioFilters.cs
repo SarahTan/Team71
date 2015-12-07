@@ -7,7 +7,7 @@ using System;
 public class AudioFilters : MonoBehaviour {
 
 	int numTracks = 9;
-	float effectDuration = 8f;
+	float effectDuration = 60f;
 	GameObject[] sources;
 
 	Chorus[] chorusEffects;
@@ -32,7 +32,9 @@ public class AudioFilters : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if (Input.GetKey (KeyCode.Return)) {
+			TurnOff();
+		}
 	}
 	
 
@@ -84,10 +86,10 @@ public class AudioFilters : MonoBehaviour {
 		for (int i = 0; i < sources.Length; i++) {
 			AudioChorusFilter chorus = sources[i].GetComponent<AudioChorusFilter>();
 			chorus.enabled = true;
-			chorus.dryMix = chorusEffects[i].mixes;
-			chorus.wetMix1 = chorusEffects[i].mixes;
-			chorus.wetMix2 = chorusEffects[i].mixes;
-			chorus.wetMix3 = chorusEffects[i].mixes;
+			chorus.dryMix = chorusEffects[i].drymix;
+			chorus.wetMix1 = chorusEffects[i].wetmix1;
+			chorus.wetMix2 = chorusEffects[i].wetmix2;
+			chorus.wetMix3 = chorusEffects[i].wetmix3;
 			chorus.delay = chorusEffects[i].delay;
 			chorus.rate = chorusEffects[i].rate;
 			chorus.depth = chorusEffects[i].depth;
@@ -194,9 +196,11 @@ public class AudioFilters : MonoBehaviour {
 						readLine++;
 					}
 
-					if (filterType == "Chorus" && filter.Count == 4) {
+					if (filterType == "Chorus" && filter.Count == 7) {
 						chorusEffects[track] = new Chorus((float)filter[0], (float)filter[1],
-						                                  (float)filter[2], (float)filter[3]);
+						                                  (float)filter[2], (float)filter[3],
+						                                  (float)filter[4], (float)filter[5],
+						                                  (float)filter[6]);
 
 					} else if (filterType == "Echo" && filter.Count == 4) {
 						echoEffects[track] = new Echo((float)filter[0], (float)filter[1], 
@@ -221,13 +225,19 @@ public class AudioFilters : MonoBehaviour {
 	}
 
 	class Chorus {
-		public float mixes = 0;
-		public float delay = 0;
-		public float rate = 0;
-		public float depth = 0;
+		public float drymix;
+		public float wetmix1;
+		public float wetmix2;
+		public float wetmix3;
+		public float delay;
+		public float rate;
+		public float depth;
 
-		public Chorus (float m, float d, float r, float h) {
-			mixes = m;
+		public Chorus (float dr, float w1, float w2, float w3, float d, float r, float h) {
+			drymix = dr;
+			wetmix1 = w1;
+			wetmix2 = w2;
+			wetmix3 = w3;
 			delay = d;
 			rate = r;
 			depth = h;
