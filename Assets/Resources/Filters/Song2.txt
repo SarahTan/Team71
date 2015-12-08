@@ -4,57 +4,57 @@ drymix: 0.5
 wetmix1: 0.5
 wetmix2: 0.5
 wetmix3: 0.5
-delay: 40
-rate: 5
-depth: 0.5
+delay: 25
+rate: 4
+depth: 0.4
 
 # 1
-drymix: 1
-wetmix1: 1
-wetmix2: 1
-wetmix2: 1
-delay: 40
-rate: 20
-depth: 1
+drymix: 0.5
+wetmix1: 0.5
+wetmix2: 0.5
+wetmix2: 0.5
+delay: 25
+rate: 7
+depth: 0.65
 
 # 2
-drymix: 0.5
-wetmix1: 0.5
-wetmix2: 0.5
-wetmix3: 0.5
-delay: 40
-rate: 3
-depth: 0.75
+drymix: 0.25
+wetmix1: 1
+wetmix2: 1
+wetmix3: 1
+delay: 25
+rate: 15
+depth: 0.8
 
 # 3
-drymix: 0.5
-wetmix1: 0.5
-wetmix2: 0.5
-wetmix3: 0.5
-delay: 40
-rate: 20
+drymix: 0.25
+wetmix1: 0.75
+wetmix2: 0.75
+wetmix3: 0.75
+delay: 25
+rate: 16
 depth: 1
 
 # 4
 drymix: 0.5
-wetmix1: 0.5
-wetmix2: 0.5
-wetmix3: 0.5
-delay: 40
-rate: 5
-depth: 0.65
+wetmix1: 0.75
+wetmix2: 0.75
+wetmix3: 0.75
+delay: 25
+rate: 1.5
+depth: 0.75
 
 # 5
 drymix: 0.5
-wetmix1: 0.5
-wetmix2: 0.5
-wetmix3: 0.5
-delay: 40
-rate: 10
-depth: 0.5
+wetmix1: 1
+wetmix2: 1
+wetmix3: 1
+delay: 25
+rate: 8
+depth: 1
 
 # 6
-drymix: 1
+drymix: 0.25
 wetmix1: 1
 wetmix2: 1
 wetmix2: 1
@@ -63,186 +63,176 @@ rate: 20
 depth: 1
 
 # 7
-drymix: 0.5
-wetmix1: 0.5
-wetmix2: 0.5
-wetmix3: 0.5
-delay: 40
-rate: 8
-depth: 0.75
+drymix: 0.25
+wetmix1: 0.75
+wetmix2: 0.75
+wetmix3: 0.75
+delay: 25
+rate: 3
+depth: 0.5
 
 # BGM
 drymix: 0.5
 wetmix1: 0.5
 wetmix2: 0.5
 wetmix3: 0.5
-delay: 40
-rate: 20
+delay: 20
+rate: 7
 depth: 0.5
 
 ***** Echo *****
 # 0
-delay: 500
+delay: 250
 decay: 0.5
-wet: 1
-dry: 1
+wet: 0.9
+dry: 0.3
 
 # 1
 delay: 125
-decay: 0.5
+decay: 0.8
 wet: 1
-dry: 1
+dry: 0.75
 
 # 2
+delay: 1000
+decay: 0.75
+wet: 1
+dry: 0.75
+
+# 3
 delay: 250
 decay: 0.5
 wet: 1
-dry: 1
-
-# 3
-delay: 125
-decay: 0.5
-wet: 0.5
-dry: 1
+dry: 0.5
 
 # 4
 delay: 250
-decay: 0.5
+decay: 0.75
 wet: 1
-dry: 1
+dry: 0.75
 
 # 5
 delay: 250
-decay: 0.5
+decay: 0.75
 wet: 1
 dry: 1
 
 # 6
 delay: 125
-decay: 0.5
-wet: 0.5
+decay: 0.75
+wet: 1
 dry: 1
 
 # 7
 delay: 250
-decay: 0.5
+decay: 0.85
 wet: 1
 dry: 1
 
 # BGM
-delay: 500
+delay: 125
 decay: 0.5
 wet: 1
 dry: 1
 
 ***** LPF *****
 # 0
-cutoff: 1500
-resonance: 10
+cutoff: 350
+resonance: 2
 reverb: 0
 
 # 1
-cutoff: 2000
-resonance: 5
-reverb: 1
+cutoff: 380
+resonance: 3.5
+reverb: 0
 
 # 2
-cutoff: 425
-resonance: 3
-reverb: 1
-
-# 3
-cutoff: 225
+cutoff: 250
 resonance: 7
 reverb: 0
 
+# 3
+cutoff: 1000
+resonance: 8
+reverb: 0
+
 # 4
-cutoff: 500
-resonance: 3
-reverb: 1
+cutoff: 1250
+resonance: 5
+reverb: 0
 
 # 5
-cutoff: 150
-resonance: 7
+cutoff: 250
+resonance: 8
 reverb: 0
 
 # 6
 cutoff: 1000
-resonance: 5
+resonance: 6
 reverb: 0
 
 # 7
-cutoff: 3000
-resonance: 5
-reverb: 1
+cutoff: 200
+resonance: 4
+reverb: 0
 
 # BGM
-cutoff: 180
-resonance: 0
+cutoff: 700
+resonance: 7
 reverb: 0
 
 ***** HPF *****
 # 0
-cutoff: 2000
-resonance: 10
-reverb: 1
+cutoff: 400
+resonance: 9
+reverb: 0
 echo: 0
 
 # 1
-cutoff: 2000
+cutoff: 400
 resonance: 5
-reverb: 1
-echo: 1
-># Echo 1
-> delay: 125
-> decay: 0.5
-> wet: 0.5
-> dry: 0.25
+reverb: 0
+echo: 0
 
 # 2
-cutoff: 1500
-resonance: 8
-reverb: 1
-echo: 1
-># Echo 2
-> delay: 250
-> decay: 0.25
-> wet: 0.5
-> dry: 0.25
-
-# 3
-cutoff: 300
+cutoff: 200
 resonance: 8
 reverb: 0
 echo: 0
 
+# 3
+cutoff: 50
+resonance: 3
+reverb: 0
+echo: 0
+
 # 4
-cutoff: 2000
-resonance: 10
-reverb: 1
+cutoff: 1500
+resonance: 9
+reverb: 0
 echo: 0
 
 # 5
 cutoff: 250
-resonance: 5
-reverb: 2
+resonance: 10
+reverb: 0
 echo: 0
 
 # 6
-cutoff: 500
+cutoff: 8000
 resonance: 10
-reverb: 1
+reverb: 0
 echo: 0
 
 # 7
-cutoff: 1250
-resonance: 8
-reverb: 1
+cutoff: 250
+resonance: 7
+reverb: 0
 echo: 0
 
 # BGM
-cutoff: 10
-resonance: 1
+cutoff: 650
+resonance: 5
 reverb: 0
 echo: 0
 
