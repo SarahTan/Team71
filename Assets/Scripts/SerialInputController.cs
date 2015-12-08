@@ -20,8 +20,11 @@ public class SerialInputController : MonoBehaviour {
 	int bufferSize = 2;
 
 	// Use this for initialization
+
 	void Start () {
 		//	For checking if the port even exists before trying to open it
+		
+
 		string[] ports;
 		if (IsOSX ()) {
 			ports = GetPortNames();
@@ -114,7 +117,7 @@ public class SerialInputController : MonoBehaviour {
 		for (int i = 0; i < 18; i++) {
 			dbg += (isTouched[i] ? '1':'0');
 		}
-		//Debug.Log (dbg);
+		Debug.Log (dbg);
 	}
 
 	void SendInput (bool on, int button) {
@@ -152,7 +155,26 @@ public class SerialInputController : MonoBehaviour {
 		}
 		//Debug.Log (dbg);	
 	}	
-	
+	public void remix(byte mode){
+		//1:start  2:end
+		if (!sp.IsOpen) {
+				sp.Open ();
+			}
+			byte[] data=new byte[2];
+			data[0]=mode;
+			try {
+				sp.Write(data,0,1);
+			} catch (Exception e) {
+				//if (Application.platform != RuntimePlatform.WindowsEditor) {
+					//Debug.LogError ("Cannot read from port '" + portName + "'! Error: " + e);
+				//}
+				
+			}
+
+			sp.Close ();
+		
+		
+	}
 	void FixedUpdate () {
 		if (portExists) {
 			if (!sp.IsOpen) {
