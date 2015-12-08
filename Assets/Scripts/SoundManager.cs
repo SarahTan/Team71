@@ -6,7 +6,8 @@ public class SoundManager : MonoBehaviour {
 	int numTracks = 8;
 	Transform tracksParent;
 	AudioSource bgm;
-	AudioSource feedback;
+	AudioSource trackFeedback;
+	AudioSource filterFeedback;
 	AudioSource remix;
 	AudioSource[] tracks;
 	float maxVol = 1f;
@@ -33,7 +34,8 @@ public class SoundManager : MonoBehaviour {
 		}
 
 		bgm = transform.FindChild ("BGM").GetComponent<AudioSource> ();
-		feedback = transform.FindChild ("Feedback").GetComponent<AudioSource> ();
+		trackFeedback = transform.FindChild ("Track Feedback").GetComponent<AudioSource> ();
+		filterFeedback = transform.FindChild ("Filter Feedback").GetComponent<AudioSource> ();
 		remix = transform.FindChild ("Remix").GetComponent<AudioSource> ();
 
 		tracksParent = transform.FindChild ("Tracks");
@@ -50,8 +52,12 @@ public class SoundManager : MonoBehaviour {
 
 	}
 
-	public void PlayFeedback () {
-		feedback.Play();
+	public void PlayTrackFeedback () {
+		trackFeedback.Play();
+	}
+
+	public void PlayFilterFeedback () {
+		filterFeedback.Play ();
 	}
 
 	public void TriggerFilter (int orb) {
@@ -92,12 +98,20 @@ public class SoundManager : MonoBehaviour {
 		remix.Play ();
 	}
 
-	public void StopRemix () {
+	public void StopRemix (bool requestChange) {
 		remix.Stop ();
-
-		currentSong = (currentSong+1) % numSongs;
-
-		ChangeSong (songs[currentSong]);
+		if (requestChange) {
+			currentSong = (currentSong + 1) % numSongs;
+			ChangeSong (songs [currentSong]);
+		} else {
+			foreach (AudioSource track in tracks) {
+				track.Stop();
+				track.volume = 0f;
+				track.Play ();
+			}
+			bgm.Stop();
+			bgm.Play();
+		}
 	}
 
 	void TestMusic () {

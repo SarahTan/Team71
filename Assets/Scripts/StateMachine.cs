@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class StateMachine : MonoBehaviour {
 
 	SoundManager soundMgr;
 	LightController lightCtrl;
+	SerialInputController serialInput;
 	int currentState = 0;
 	int numStates = 5;
 	State[] states;
@@ -28,6 +30,7 @@ public class StateMachine : MonoBehaviour {
 
 		soundMgr = GameObject.Find ("Sound Manager").GetComponent<SoundManager>();
 		lightCtrl = GameObject.Find ("Light Controller").GetComponent<LightController> ();
+		serialInput = GameObject.Find ("MK").GetComponent<SerialInputController> ();
 
 		states = new State[numStates];
 		for (int i = 0; i < numStates; i++) {
@@ -111,10 +114,11 @@ public class StateMachine : MonoBehaviour {
 
 	// Called at the start of each state, to flash any buttons which aren't already stepped on
 	void FlashAllUnplayedButtons () {
-		string str = "State " + currentState + ", unstepped buttons: ";
+		string str = "State " + currentState + ", unplayed buttons: ";
 		for (int i = 0; i < buttonIsStepped.Length; i++) {
-			Debug.Log("readytoturnoff: " +readyToTurnOff[i]);
-			if (!buttonIsStepped[i] && readyToTurnOff[i] && states[currentState].ButtonInState(i)) {
+			if (buttonIsStepped[i]) {
+				lightCtrl.TurnOnLED(i);
+			} else if (!buttonIsStepped[i] && readyToTurnOff[i] && states[currentState].ButtonInState(i)) {
 				lightCtrl.FlashLED (states[currentState].buttons[i]);
 				string tempStr = i + ", ";
 				str += tempStr;
@@ -135,6 +139,13 @@ public class StateMachine : MonoBehaviour {
 	// Called in State0, when correct button is stepped on
 	// This class handles all state transitions
 	IEnumerator StateTimer () {
+		for (int i = 1; i <= 3; i++) {
+			if (buttonIsStepped[i]) {
+				StartCoroutine(ButtonTimer(i));
+				soundMgr.StartMusic(i);
+			}
+		}
+
 		// State 1, 2, 3
 		while (currentState < 3) {
 			currentState++;
@@ -150,14 +161,10 @@ public class StateMachine : MonoBehaviour {
 		currentState++;
 		soundMgr.PlayRemix();
 		lightCtrl.RemixLED ();
+		serialInput.remix (Convert.ToByte(1));
 		
 		yield return new WaitForSeconds(remixLength);
-		soundMgr.StopRemix ();
-		currentState = 0;
-		for (int i = 0; i < numButtons; i++) {
-			lightCtrl.TurnOffLED(i);
-		}
-		FlashAllUnplayedButtons();
+		ResetStates (true);
 	}
 
 	IEnumerator ButtonTimer (int button) {
@@ -181,6 +188,27 @@ public class StateMachine : MonoBehaviour {
 		} 
 	}
 
+	// Also called by KeyboardController when Q/W is pressed
+	public void ResetStates (bool changeSong) {
+		soundMgr.StopRemix(changeSong);
+		serialInput.remix (Convert.ToByte(2));
+		currentState = 0;
+		for (int i = 0; i < numButtons; i++) {
+			lightCtrl.TurnOffLED(i);
+			readyToTurnOff[i] = true;
+		}
+		StopAllCoroutines ();
+
+		if (buttonIsStepped [0]) {
+			soundMgr.StartMusic(0);
+			lightCtrl.TurnOnLED(0);
+			StartCoroutine (ButtonTimer(0));
+			StartCoroutine(StateTimer());
+		} else {
+			FlashAllUnplayedButtons();
+		}
+	}
+
 	// Called by SerialInputController
 	public void StepOn (int input) {
 		int button = ButtonMapping (input);
@@ -189,7 +217,7 @@ public class StateMachine : MonoBehaviour {
 			buttonIsStepped [button] = true;
 
 			if (currentState != 4) {
-				soundMgr.PlayFeedback ();
+				soundMgr.PlayTrackFeedback ();
 
 				// Check if button is in state and is not currently being stepped on
 				if (states [currentState].ButtonInState (button) && buttonIsStepped [button]) {

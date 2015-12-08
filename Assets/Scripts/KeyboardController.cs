@@ -84,6 +84,12 @@ public class KeyboardController : MonoBehaviour {
 		}
 		SendInput (input, stepDown);
 
+
+		if (Input.GetKeyDown ("q")) {
+			stateMachine.ResetStates(false);	// Just reset to State 0
+		} else if (Input.GetKeyDown ("w")) {
+			stateMachine.ResetStates(true);		// Reset to State 0 and change songs
+		}
 	}
 
 	void SendInput (int input, bool stepDown) {

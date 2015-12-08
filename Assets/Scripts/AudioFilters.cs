@@ -6,6 +6,7 @@ using System;
 
 public class AudioFilters : MonoBehaviour {
 
+	SoundManager soundMgr;
 	int numTracks = 9;
 	float effectDuration = 60f;
 	GameObject[] sources;
@@ -15,19 +16,22 @@ public class AudioFilters : MonoBehaviour {
 	LPF[] LPFEffects;
 	HPF[] HPFEffects;
 
+	int currentFilter = 0;
+
 	// Use this for initialization
 	void Awake () {
+		soundMgr = GetComponent<SoundManager>();
 		sources = new GameObject[numTracks];
 		chorusEffects = new Chorus[numTracks];
 		echoEffects = new Echo[numTracks];
 		LPFEffects = new LPF[numTracks];
 		HPFEffects = new HPF[numTracks];
 		
-		Transform tracks = transform.GetChild (3);
+		Transform tracks = transform.FindChild("Tracks");
 		for (int i = 0; i < sources.Length-1; i++) {
 			sources[i] = tracks.GetChild(i).gameObject;
 		}		
-		sources [sources.Length-1] = transform.GetChild (0).gameObject;		// BGM
+		sources [sources.Length-1] = transform.FindChild("BGM").gameObject;		// BGM
 	}
 	
 	// Update is called once per frame
@@ -39,27 +43,45 @@ public class AudioFilters : MonoBehaviour {
 	
 
 	public void Trigger (int effect) {
-		TurnOff ();
-
 		switch (effect) {
 		case 8:
-			TriggerChorus ();
+			if (currentFilter != 1) {
+				TurnOff ();
+				soundMgr.PlayFilterFeedback();
+				TriggerChorus ();
+			}
 			break;
 
 		case 9:
-			TriggerReverb ();
+			if (currentFilter != 2) {
+				TurnOff ();
+				soundMgr.PlayFilterFeedback();
+				TriggerReverb ();
+			}
 			break;
 
 		case 10:
-			TriggerEcho ();
+			if (currentFilter != 3) {
+				TurnOff ();
+				soundMgr.PlayFilterFeedback();
+				TriggerEcho ();
+			}
 			break;
 
 		case 11:
-			TriggerLPF ();
+			if (currentFilter != 4) {
+				TurnOff ();
+				soundMgr.PlayFilterFeedback();
+				TriggerLPF ();
+			}
 			break;
 
 		case 12:
-			TriggerHPF ();
+			if (currentFilter != 5) {
+				TurnOff ();
+				soundMgr.PlayFilterFeedback();
+				TriggerHPF ();
+			}
 			break;
 
 		default:
@@ -79,10 +101,14 @@ public class AudioFilters : MonoBehaviour {
 			source.GetComponent<AudioLowPassFilter>().enabled = false;
 			source.GetComponent<AudioReverbFilter>().enabled = false;
 		}
+
+		currentFilter = 0;
 	}
 
 
 	void TriggerChorus () {
+		currentFilter = 1;
+
 		for (int i = 0; i < sources.Length; i++) {
 			AudioChorusFilter chorus = sources[i].GetComponent<AudioChorusFilter>();
 			chorus.enabled = true;
@@ -97,6 +123,8 @@ public class AudioFilters : MonoBehaviour {
 	}
 
 	void TriggerReverb () {
+		currentFilter = 2;
+
 		foreach (GameObject source in sources) {
 			source.GetComponent<AudioReverbFilter>().enabled = true;
 			source.GetComponent<AudioReverbFilter>().reverbPreset = AudioReverbPreset.Drugged;
@@ -104,6 +132,8 @@ public class AudioFilters : MonoBehaviour {
 	}
 
 	void TriggerEcho() {
+		currentFilter = 3;
+
 		for (int i = 0; i < sources.Length; i++) {
 			AudioEchoFilter echo = sources[i].GetComponent<AudioEchoFilter>();
 			echo.enabled = true;
@@ -115,6 +145,8 @@ public class AudioFilters : MonoBehaviour {
 	}
 
 	void TriggerLPF () {
+		currentFilter = 4;
+
 		for (int i = 0; i < sources.Length; i++) {
 			AudioLowPassFilter lpf = sources[i].GetComponent<AudioLowPassFilter>();
 			lpf.enabled = true;
@@ -127,6 +159,8 @@ public class AudioFilters : MonoBehaviour {
 	}
 
 	void TriggerHPF () {
+		currentFilter = 5;
+
 		for (int i = 0; i < sources.Length; i++) {
 			AudioHighPassFilter hpf = sources[i].GetComponent<AudioHighPassFilter>();
 			hpf.enabled = true;
