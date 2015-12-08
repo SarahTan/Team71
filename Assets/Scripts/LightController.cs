@@ -166,8 +166,11 @@ public class LightController : MonoBehaviour {
 	}
 
 	public void RemixLED () {
-		for(int i=0;i<8;i++)
-		ledMode [i] = 6;
+		for (int i = 0; i < 8; i++) {
+			buttonFlashing [i] = true;
+			StartCoroutine (FlashVirtualButton (i));
+			ledMode [i] = 6;
+		}
 	}
 
 }

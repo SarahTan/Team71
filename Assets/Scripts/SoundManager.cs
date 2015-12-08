@@ -95,16 +95,9 @@ public class SoundManager : MonoBehaviour {
 	public void StopRemix () {
 		remix.Stop ();
 
-		int nextSong = currentSong;
+		currentSong = (currentSong+1) % numSongs;
 
-		// To use if we have more than 2 songs
-//		while (numSongs != 1 && nextSong == currentSong) {
-//			nextSong = Random.Range (0, numSongs);
-//		}
-
-		nextSong = (nextSong+1) % numSongs;
-
-		ChangeSong (songs[nextSong]);
+		ChangeSong (songs[currentSong]);
 	}
 
 	void TestMusic () {
@@ -114,6 +107,7 @@ public class SoundManager : MonoBehaviour {
 	}
 
 	void ChangeSong (string folder) {
+		Debug.Log ("song " + currentSong);
 		filters.TurnOff ();
 		filters.LoadParams (filterParams[currentSong]);
 		AudioClip[] clips = Resources.LoadAll<AudioClip> (folder);

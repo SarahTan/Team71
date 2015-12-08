@@ -9,7 +9,7 @@ public class StateMachine : MonoBehaviour {
 	int numStates = 5;
 	State[] states;
 	float stateLength = 16f;
-	float remixLength = 20f;
+	float remixLength = 21f;
 
 	int numButtons = 8;
 	bool[] readyToTurnOff;
@@ -19,6 +19,10 @@ public class StateMachine : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		readyToTurnOff = new bool[numButtons];
+		for (int i = 0; i < numButtons; i++) {
+			readyToTurnOff[i] = true;
+		}
+
 		buttonTimerInProgress = new bool[numButtons];
 		buttonIsStepped = new bool[numButtons];
 
@@ -29,7 +33,7 @@ public class StateMachine : MonoBehaviour {
 		for (int i = 0; i < numStates; i++) {
 			states[i] = new State(i);
 		}
-		FlashAllUnsteppedButtons ();
+		FlashAllUnplayedButtons ();
 	}
 	
 	// Update is called once per frame
@@ -106,10 +110,11 @@ public class StateMachine : MonoBehaviour {
 	}
 
 	// Called at the start of each state, to flash any buttons which aren't already stepped on
-	void FlashAllUnsteppedButtons () {
+	void FlashAllUnplayedButtons () {
 		string str = "State " + currentState + ", unstepped buttons: ";
 		for (int i = 0; i < buttonIsStepped.Length; i++) {
-			if (!buttonIsStepped[i] && states[currentState].ButtonInState(i)) {
+			Debug.Log("readytoturnoff: " +readyToTurnOff[i]);
+			if (!buttonIsStepped[i] && readyToTurnOff[i] && states[currentState].ButtonInState(i)) {
 				lightCtrl.FlashLED (states[currentState].buttons[i]);
 				string tempStr = i + ", ";
 				str += tempStr;
@@ -133,7 +138,7 @@ public class StateMachine : MonoBehaviour {
 		// State 1, 2, 3
 		while (currentState < 3) {
 			currentState++;
-			FlashAllUnsteppedButtons();
+			FlashAllUnplayedButtons();
 			yield return new WaitForSeconds(stateLength);
 		}
 
@@ -152,7 +157,7 @@ public class StateMachine : MonoBehaviour {
 		for (int i = 0; i < numButtons; i++) {
 			lightCtrl.TurnOffLED(i);
 		}
-		FlashAllUnsteppedButtons();
+		FlashAllUnplayedButtons();
 	}
 
 	IEnumerator ButtonTimer (int button) {
