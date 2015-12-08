@@ -16,7 +16,7 @@ public class SoundManager : MonoBehaviour {
 	TextAsset[] filterParams;
 
 	string[] songs;
-	int numSongs = 2;
+	int numSongs = 3;
 	int currentSong;
 
 	// Use this for initialization
@@ -29,7 +29,7 @@ public class SoundManager : MonoBehaviour {
 
 		songs = new string[numSongs];
 		for (int i = 0; i < numSongs; i++) {
-			songs[i] = "Music/Song" + (i+1);
+			songs[i] = "Music/Song" + i;
 		}
 
 		bgm = transform.FindChild ("BGM").GetComponent<AudioSource> ();
@@ -40,7 +40,7 @@ public class SoundManager : MonoBehaviour {
 		tracks = new AudioSource[numTracks];
 		tracks = tracksParent.GetComponentsInChildren<AudioSource> ();
 
-		currentSong = 0;
+		currentSong = 2;
 		ChangeSong (songs [currentSong]);
 		//TestMusic ();
 	}
@@ -102,7 +102,7 @@ public class SoundManager : MonoBehaviour {
 //			nextSong = Random.Range (0, numSongs);
 //		}
 
-		nextSong = (nextSong+1) % 2;
+		nextSong = (nextSong+1) % numSongs;
 
 		ChangeSong (songs[nextSong]);
 	}
