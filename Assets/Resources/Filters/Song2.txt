@@ -158,7 +158,7 @@ reverb: 0
 
 # 4
 cutoff: 1250
-resonance: 5
+resonance: 2
 reverb: 0
 
 # 5

@@ -8,7 +8,7 @@ public class AudioFilters : MonoBehaviour {
 
 	SoundManager soundMgr;
 	int numTracks = 9;
-	float effectDuration = 60f;
+	float effectDuration = 8f;
 	GameObject[] sources;
 
 	Chorus[] chorusEffects;
@@ -101,7 +101,7 @@ public class AudioFilters : MonoBehaviour {
 			source.GetComponent<AudioLowPassFilter>().enabled = false;
 			source.GetComponent<AudioReverbFilter>().enabled = false;
 		}
-
+		soundMgr.ChangeMaxVol (1f);
 		currentFilter = 0;
 	}
 
@@ -129,6 +129,7 @@ public class AudioFilters : MonoBehaviour {
 			source.GetComponent<AudioReverbFilter>().enabled = true;
 			source.GetComponent<AudioReverbFilter>().reverbPreset = AudioReverbPreset.Drugged;
 		}
+		soundMgr.ChangeMaxVol (0.7f);
 	}
 
 	void TriggerEcho() {
@@ -142,6 +143,7 @@ public class AudioFilters : MonoBehaviour {
 			echo.dryMix = echoEffects[i].dry;
 			echo.wetMix = echoEffects[i].wet;
 		}
+		soundMgr.ChangeMaxVol (0.8f);
 	}
 
 	void TriggerLPF () {
@@ -156,6 +158,7 @@ public class AudioFilters : MonoBehaviour {
 			sources[i].GetComponent<AudioReverbFilter>().enabled = true;
 			sources[i].GetComponent<AudioReverbFilter>().reverbPreset = LPFEffects[i].reverb;
 		}
+		soundMgr.ChangeMaxVol (0.6f);
 	}
 
 	void TriggerHPF () {
@@ -179,6 +182,7 @@ public class AudioFilters : MonoBehaviour {
 				echo.wetMix = HPFEffects[i].echo.wet;
 			}
 		}
+		soundMgr.ChangeMaxVol (0.8f);
 	}
 
 	public void LoadParams (TextAsset filterParams) {

@@ -44,12 +44,35 @@ public class SoundManager : MonoBehaviour {
 
 		currentSong = 2;
 		ChangeSong (songs [currentSong]);
+		InvokeRepeating ("CheckNumTracksPlaying", 0f, 1f);
 		//TestMusic ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
+	}
+
+	void CheckNumTracksPlaying () {
+		int numTracksPlaying = 0;
+		foreach (AudioSource track in tracks) {
+			if (track.volume == maxVol) {
+				numTracksPlaying++;
+			}
+		}
+
+		if (numTracksPlaying <= 4) {
+			trackFeedback.volume = 0.1f;
+			filterFeedback.volume = 0.3f;
+
+		} else if (numTracksPlaying <= 6) {			
+			trackFeedback.volume = 0.15f;
+			filterFeedback.volume = 0.4f;
+
+		} else {
+			trackFeedback.volume = 0.2f;
+			filterFeedback.volume = 0.5f;
+		}
 	}
 
 	public void PlayTrackFeedback () {
@@ -114,6 +137,14 @@ public class SoundManager : MonoBehaviour {
 		}
 	}
 
+	public void ChangeMaxVol (float newVol) {
+		maxVol = newVol;
+		for (int i = 0; i < numTracks; i++) {
+			tracks[i].volume = newVol;
+		}
+		bgm.volume = newVol;
+	}
+
 	void TestMusic () {
 		foreach (AudioSource track in tracks) {
 			track.volume = 1f;
@@ -128,8 +159,8 @@ public class SoundManager : MonoBehaviour {
 
 		for (int i = 0; i < tracks.Length; i++) {
 			tracks[i].Stop();
-			tracks[i].clip = clips[i];
 			tracks[i].volume = 0f;
+			tracks[i].clip = clips[i];
 			tracks[i].Play();
 		}
 
