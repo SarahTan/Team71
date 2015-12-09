@@ -10,7 +10,7 @@ public class StateMachine : MonoBehaviour {
 	int currentState = 0;
 	int numStates = 5;
 	State[] states;
-	float stateLength = 16f;
+	float stateLength = 8f;
 	float remixLength = 21f;
 
 	int numButtons = 8;

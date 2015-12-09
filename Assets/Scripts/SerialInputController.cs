@@ -11,7 +11,7 @@ public class SerialInputController : MonoBehaviour {
 	public bool[] isTouched;
 
 	public int[] ledMode;
-
+	const int sendNum = 10;
 	private SerialPort led;
 	private SerialPort sp;
 	string portName = "/dev/cu.usbmodem1411";
@@ -117,7 +117,7 @@ public class SerialInputController : MonoBehaviour {
 		for (int i = 0; i < 18; i++) {
 			dbg += (isTouched[i] ? '1':'0');
 		}
-		Debug.Log (dbg);
+//		Debug.Log (dbg);
 	}
 
 	void SendInput (bool on, int button) {
@@ -149,30 +149,36 @@ public class SerialInputController : MonoBehaviour {
 		updateData (status);
 
 		//debug		
-		 string dbg = "";
-		for (int i = 0; i < 18; i++) {
-			dbg += (status[i] ? '1':'0');
-		}
+		// string dbg = "";
+		//for (int i = 0; i < 18; i++) {
+		//	dbg += (status[i] ? '1':'0');
+		//}
 		//Debug.Log (dbg);	
 	}	
 
 	public void remix(byte mode){
 		if (IsOSX ()) {
 			//1:start  2:end
-			if (!sp.IsOpen) {
-				sp.Open ();
-			}
+			Debug.Log("remix mode:"+mode);
+			for(int i=0;i<sendNum;i++){
 
-			byte[] data = new byte[2];
-			data [0] = mode;
-			try {
-				sp.Write (data, 0, 1);
-			} catch (Exception e) {
-				//if (Application.platform != RuntimePlatform.WindowsEditor) {
-				//Debug.LogError ("Cannot read from port '" + portName + "'! Error: " + e);
-				//}
+				if (!sp.IsOpen) {
+					sp.Open ();
+				}
+
+				byte[] data = new byte[1];
+					data[0]=mode;
+				
+				try {
+					sp.Write (data, 0, 1);
+				} catch (Exception e) {
+					Debug.Log("remix failed mode:"+mode);
+					//if (Application.platform != RuntimePlatform.WindowsEditor) {
+					//Debug.LogError ("Cannot read from port '" + portName + "'! Error: " + e);
+					//}
+				}
+				sp.Close ();
 			}
-			sp.Close ();
 		}
 	}
 

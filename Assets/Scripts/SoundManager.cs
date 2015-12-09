@@ -19,6 +19,7 @@ public class SoundManager : MonoBehaviour {
 	string[] songs;
 	int numSongs = 3;
 	int currentSong;
+	bool remixPlaying = false;
 
 	// Use this for initialization
 	void Start () {		
@@ -119,10 +120,12 @@ public class SoundManager : MonoBehaviour {
 			StartCoroutine (DecreaseVol (tracks[i], i));
 		}
 		remix.Play ();
+		remixPlaying = true;
 	}
 
 	public void StopRemix (bool requestChange) {
 		remix.Stop ();
+		remixPlaying = false;
 		if (requestChange) {
 			currentSong = (currentSong + 1) % numSongs;
 			ChangeSong (songs [currentSong]);
@@ -138,11 +141,13 @@ public class SoundManager : MonoBehaviour {
 	}
 
 	public void ChangeMaxVol (float newVol) {
-		maxVol = newVol;
-		for (int i = 0; i < numTracks; i++) {
-			tracks[i].volume = newVol;
+		if (!remixPlaying) {
+			maxVol = newVol;
+			for (int i = 0; i < numTracks; i++) {
+				tracks [i].volume = newVol;
+			}
+			bgm.volume = newVol;
 		}
-		bgm.volume = newVol;
 	}
 
 	void TestMusic () {
@@ -172,15 +177,15 @@ public class SoundManager : MonoBehaviour {
 
 	IEnumerator IncreaseVol (AudioSource audio, int trackNum) {
 		while (changingVol[trackNum]) {
-			yield return new WaitForFixedUpdate();
+			yield return new WaitForFixedUpdate ();
 		}
 
 		changingVol [trackNum] = true;
 		while (audio.volume < maxVol) {
 			audio.volume += 0.01f;
-			yield return new WaitForFixedUpdate();
+			yield return new WaitForFixedUpdate ();
 		}
-		changingVol[trackNum] = false;
+		changingVol [trackNum] = false;
 	}
 
 	IEnumerator DecreaseVol (AudioSource audio, int trackNum) {
@@ -192,7 +197,7 @@ public class SoundManager : MonoBehaviour {
 		changingVol[trackNum] = true;
 		while (audio.volume > 0) {
 			audio.volume -= 0.01f;
-			yield return new WaitForFixedUpdate();
+			yield return new WaitForFixedUpdate ();
 		}
 		changingVol[trackNum] = false;
 	}
